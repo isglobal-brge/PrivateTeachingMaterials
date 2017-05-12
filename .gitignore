@@ -33,5 +33,5 @@ vignettes/*.pdf
 *.knit.md
 
 # power point
-.ppt
-.pptx
+*.ppt
+*.pptx
