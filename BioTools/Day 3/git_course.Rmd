@@ -393,12 +393,12 @@ You can think of them as a way to request a brand new working directory and proj
 
 The ``git branch`` command allows:
 
- - To create breanches
+ - To create breaches
  - To list current existing branches.
  - To rename existing branches
- - Tp delete branches. 
+ - To delete branches. 
 
-But it doesn't let you *switch between branches* or put a *forked history back together* again. These are de domains of integrated with the ``git checkout`` and ``git merge`` commands.
+But it doesn't let you *switch between branches* or put a *forked history back together* again. These are the domains of integrated with the ``git checkout`` and ``git merge`` commands.
 
 
 Git Branches in GitHub
@@ -413,3 +413,99 @@ When you create a **branch** off the **master branch**, you are making a copy of
 
 Git Branches with GitKraken
 ========================================================
+
+![GitKraken - Create a branch.](img/kraken08.png)
+
+
+Git Branches with GitKraken
+========================================================
+
+![GitKraken - Mearge branch "devel" into "master".](img/kraken09.png)
+
+
+Git Branches with GitKraken
+========================================================
+
+![GitKraken - Time line of both "master" and "devel" branches.](img/kraken10.png)
+
+
+Git Branches with GitKraken
+========================================================
+
+![GitHub & Sublime Text 3 showing the content of the function "showError" from "master" and "devel" branches.](img/error_same_file_different_branches.png)
+
+Git Branches with GitKraken
+========================================================
+
+![GitKraken - Commits on "master" and "devel" branches adding the same file with different content.](img/kraken11.png)
+
+
+Git Branches with GitKraken
+========================================================
+What happen if we try to merge "devel" branch into "master" one?
+
+![GitKraken - Showing conflict.](img/kraken12.png)
+
+
+Git Branches with GitKraken
+========================================================
+![GitKraken - Editor used to solve the conflict.](img/kraken13.png)
+
+
+Git Branches with GitKraken
+========================================================
+![GitKraken - Editor used to solve the conflict with selected final version.](img/kraken14.png)
+
+
+Git Branches with GitKraken
+========================================================
+![GitKraken - Commit and merge after solving conflict](img/kraken15.png)
+
+
+Exercise 4
+========================================================
+ 1. Clone the following repository:
+   ```
+   https://github.com/carleshf/Test
+   ```
+ 2. Create a branch with your name as: *first letter in name* + *surname*
+   ```
+   chernandez
+   ```
+ 3. Add a new R file called *first letter in name* + *surname*. Inside create a function that prints your name.
+ 4. Merge your branch with "master".
+
+
+Exercise 5
+========================================================
+ 1. In your branch:
+   - (ROW 1): Create a file called ``row1.R`` with a function ``show`` printing your name.
+   - (ROW 2): Create a file called ``row2.R`` with a function ``show`` printing your names.
+   - (ROW N): Create a file called ``rowN.R`` with a function ``show`` printing your names.
+ 2. Try to merge your branch with "master".
+ 3. How have you solved the conflict?
+
+
+Exercise 6
+========================================================
+Can you describe what happened with this branches?
+![](img/kraken16.png)
+
+
+Deploying R packages from GitHub
+========================================================
+The aim of ``devtools`` is to make package development easier by providing R functions that simplify common tasks.
+
+This includes functions to install R packages directly from GitHub repositories:
+
+```
+devtools::install_github("hadley/devtools")
+```
+
+Exercise 7
+========================================================
+Create a repository in your GitHub account. Then clone it locally. 
+
+Using RStudio and the knowledge from first session, create an R package with an exported function called ``printVersion``, that returns a vector with the name of the package and the author. 
+
+Then push the changes and use ``devtools`` to install it from GitHub.
