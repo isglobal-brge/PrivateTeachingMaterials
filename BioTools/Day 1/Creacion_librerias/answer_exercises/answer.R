@@ -1,3 +1,7 @@
+#
+# Generate data
+#
+
 set.seed(123456)
 
 n <- 100
@@ -13,6 +17,10 @@ dd <- data.frame(
 group <- as.factor(sample(c("A", "B"), n, rep=TRUE))
 
 
+#
+# Exercise 1
+#
+
 compareGroups <- function(x, y, pvalue=TRUE){
   
   if(missing(x) | missing(y))
@@ -27,7 +35,6 @@ compareGroups <- function(x, y, pvalue=TRUE){
   ans <- list()
   
   for (i in 1: ncol(x)){
-    print(i)
     xx <- x[,i]
     ans[[i]] <- list()
     ans[[i]]$table <- descriptive(xx, y)
@@ -67,14 +74,33 @@ pval <- function(x, y) {
 }
 
 
+compareGroups(dd, group)
+
+#
+# Exercise 2
+#
 
 
 
+compareGroupsF <- function(formula, data, ...){
+  mf <- model.frame(formula=formula, data=data)
+  mt <- attr(mf, "terms")
+  x <- model.matrix(mt, data=mf)
+  y <- model.response(mf)
+  
+  ans <- compareGroups(x, y, ...)
+  ans
+}
 
+dd2 <- data.frame(dd, group=group)
 
+compareGroupsF(group ~ sex + age , data=dd2) # error (remove constant)
 
+compareGroupsF(group ~ sex + age - 1 , data=dd2)
 
+compareGroupsF(group ~ sex + age - 1 , data=dd2, pvalue=FALSE)
 
+compareGroupsF(group ~ . - 1 , data=dd2)
 
 
 
