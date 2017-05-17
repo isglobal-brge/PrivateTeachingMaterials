@@ -200,7 +200,7 @@ This creates a new sub-directory named ``.git`` that contains all of our necessa
 
 First steps with Git and GitHub
 ========================================================
-**Addint content to a Project**
+**Adding content to a Project**
 
  - Checking the Status of Your Files
 
@@ -218,7 +218,7 @@ This means we have a clean working directory. The command tells us which branch 
 
 First steps with Git and GitHub
 ========================================================
-**Addint content to a Project**
+**Adding content to a Project**
 
 Let's say we want to add a new file, the simple ``README`` file. If the file did not exist before, and we run ``git status``, we see the untracked file:
 
@@ -235,7 +235,7 @@ nothing added to commit but untracked files present [...]
 
 First steps with Git and GitHub
 ========================================================
-**Addint content to a Project**
+**Adding content to a Project**
 
 In order to begin tracking a new file, we use the command ``git add``. To begin tracking the ``README`` file:
 
