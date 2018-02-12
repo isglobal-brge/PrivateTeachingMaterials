@@ -1,0 +1,67 @@
+\documentclass[11pt]{article}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\title{\bf Ejemplo creaci\'on de una vignette: modelo lineal}
+\vspace{1cm}
+\author{Juan R Gonz\'alez}
+
+\maketitle
+
+\begin{center}
+  Instituto de Salud Global Barcelona (ISGlobal)
+  \vspace{1cm}
+  {\tt juan.rgonzalez@isglobal.org}
+  {\tt http://www.creal.cat/jrgonzalez/software.htm}
+\end{center}
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+Este documento da una visi\'on general del paquete {\tt lmPackage} que est\'a
+accesible en CRAN.  Mediante esta librer\'ia se puede llevar a cabo ...
+
+\section{Getting started}
+\noindent El paquete {\tt lmPackage} utiliza la librer\'a {\tt survival}.  Empezamos cargando las librer\'ias necesarias.
+
+<<load_library>>=
+library(survival)
+@
+
+\noindent Despues, la librer\'ia puede cargarse ejecutando
+
+<<load_library2>>=
+library(lmPackage)
+@
+
+
+\section{The data}
+
+\noindent Los datos pueden importarse usando la funci\'on {\tt read.delim} de forma usual. El paquete tiene unos datos (sobre unos lagos) que pueden usarse como ejemplo. Se cargan usando  la funci\'on data
+
+<<load_data>>=
+bass <- read.delim("../extdata/bass.txt")
+@
+
+\section{Model parameter estimates}
+
+\noindent El modelo se puede estimar usando la funci\'on {\tt lmMod}
+
+<<fit_model>>=
+mod <- lmModFinal(Mercury ~ Alkalinity, data=bass)
+names(mod)
+@
+
+
+\noindent Se puede crear una figura con el modelo mediante la siguiente instrucci\'on:
+
+<<fig_mod, fig.cap='Modelo de regresion lineal estimado mediante descomposicion QR'>>=
+plot(mod$data[,2], mod$data[,3], ylab="Mercury", xlab="Alkalinity")
+abline(mod)
+@
+
+
+\end{document}

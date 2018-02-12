@@ -1,0 +1,81 @@
+\documentclass[11pt]{article}
+
+\usepackage{Sweave}
+\begin{document}
+\input{lmPackage-concordance}
+
+\title{\bf Ejemplo creaci\'on de una vignette: modelo lineal}
+\vspace{1cm}
+\author{Juan R Gonz\'alez}
+
+\maketitle
+
+\begin{center}
+  Instituto de Salud Global Barcelona (ISGlobal)
+  \vspace{1cm}
+  {\tt juan.rgonzalez@isglobal.org}
+  {\tt http://www.creal.cat/jrgonzalez/software.htm}
+\end{center}
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+Este documento da una visi\'on general del paquete {\tt lmPackage} que est\'a
+accesible en CRAN.  Mediante esta librer\'ia se puede llevar a cabo ...
+
+\section{Getting started}
+\noindent El paquete {\tt lmPackage} utiliza la librer\'a {\tt survival}.  Empezamos cargando las librer\'ias necesarias.
+
+\begin{Schunk}
+\begin{Sinput}
+> library(survival)
+\end{Sinput}
+\end{Schunk}
+
+\noindent Despues, la librer\'ia puede cargarse ejecutando
+
+\begin{Schunk}
+\begin{Sinput}
+> library(lmPackage)
+\end{Sinput}
+\end{Schunk}
+
+
+\section{The data}
+
+\noindent Los datos pueden importarse usando la funci\'on {\tt read.delim} de forma usual. El paquete tiene unos datos (sobre unos lagos) que pueden usarse como ejemplo. Se cargan usando  la funci\'on data
+
+\begin{Schunk}
+\begin{Sinput}
+> bass <- read.delim("../extdata/bass.txt")
+\end{Sinput}
+\end{Schunk}
+
+\section{Model parameter estimates}
+
+\noindent El modelo se puede estimar usando la funci\'on {\tt lmMod}
+
+\begin{Schunk}
+\begin{Sinput}
+> mod <- lmModFinal(Mercury ~ Alkalinity, data=bass)
+> names(mod)
+\end{Sinput}
+\begin{Soutput}
+[1] "coefficients" "vcov"         "sigma"        "df"           "data"        
+\end{Soutput}
+\end{Schunk}
+
+
+\noindent Se puede crear una figura con el modelo mediante la siguiente instrucci\'on:
+
+\begin{Schunk}
+\begin{Sinput}
+> plot(mod$data[,2], mod$data[,3], ylab="Mercury", xlab="Alkalinity")
+> abline(mod)
+\end{Sinput}
+\end{Schunk}
+
+
+\end{document}

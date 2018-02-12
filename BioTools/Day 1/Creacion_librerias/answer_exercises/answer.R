@@ -96,20 +96,27 @@ dd2 <- data.frame(dd, group=group)
 
 compareGroupsF(group ~ sex + age , data=dd2) # error (remove constant)
 
-compareGroupsF(group ~ sex + age - 1 , data=dd2)
+out <- compareGroupsF(group ~ sex + age - 1 , data=dd2)
 
 compareGroupsF(group ~ sex + age - 1 , data=dd2, pvalue=FALSE)
 
 compareGroupsF(group ~ . - 1 , data=dd2)
 
 
+#
+# Exercise 3
+#
 
-
-
-
-
-
-
+d <- 3
+ans <- NULL
+for (i in 1:length(out)) {
+dd.i <- out[[i]]$table
+grA <- paste0(dd.i[1,2], "(", round(dd.i[1,3], d), ")")
+grB <- paste0(dd.i[2,2], "(", round(dd.i[2,3], d), ")")
+p <- out[[i]]$pvalue 
+ans.i <- c(grA, grB, formatC(p))
+ans <- rbind(ans, ans.i)
+}
 
 
 

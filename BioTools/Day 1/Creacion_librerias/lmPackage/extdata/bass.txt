@@ -1,0 +1,54 @@
+Lake	Alkalinity	pH	Calcium	Chlorophyll	Mercury
+Alligator        	5.9	6.1	3	0.7	1.23
+Annie            	3.5	5.1	1.9	3.2	1.33
+Apopka           	116	9.1	44.1	128.3	0.04
+Blue Cypress     	39.4	6.9	16.4	3.5	0.44
+Brick            	2.5	4.6	2.9	1.8	1.2
+Bryant           	19.6	7.3	4.5	44.1	0.27
+Cherry           	5.2	5.4	2.8	3.4	0.48
+Crescent         	71.4	8.1	55.2	33.7	0.19
+Deer Point       	26.4	5.8	9.2	1.6	0.83
+Dias             	4.8	6.4	4.6	22.5	0.81
+Dorr             	6.6	5.4	2.7	14.9	0.71
+Down             	16.5	7.2	13.8	4	0.5
+Eaton            	25.4	7.2	25.2	11.6	0.49
+East Tohopekaliga	7.1	5.8	5.2	5.8	1.16
+Farm-13          	128	7.6	86.5	71.1	0.05
+George           	83.7	8.2	66.5	78.6	0.15
+Griffin          	108.5	8.7	35.6	80.1	0.19
+Harney           	61.3	7.8	57.4	13.9	0.77
+Hart             	6.4	5.8	4	4.6	1.08
+Hatchineha       	31	6.7	15	17	0.98
+Iamonia          	7.5	4.4	2	9.6	0.63
+Istokpoga        	17.3	6.7	10.7	9.5	0.56
+Jackson          	12.6	6.1	3.7	21	0.41
+Josephine        	7	6.9	6.3	32.1	0.73
+Kingsley         	10.5	5.5	6.3	1.6	0.34
+Kissimmee        	30	6.9	13.9	21.5	0.59
+Lochloosa        	55.4	7.3	15.9	24.7	0.34
+Louisa           	3.9	4.5	3.3	7	0.84
+Miccasukee       	5.5	4.8	1.7	14.8	0.5
+Minneola         	6.3	5.8	3.3	0.7	0.34
+Monroe           	67	7.8	58.6	43.8	0.28
+Newmans          	28.8	7.4	10.2	32.7	0.34
+Ocean Pond       	5.8	3.6	1.6	3.2	0.87
+Ocheese Pond     	4.5	4.4	1.1	3.2	0.56
+Okeechobee       	119.1	7.9	38.4	16.1	0.17
+Orange           	25.4	7.1	8.8	45.2	0.18
+Panasoffkee      	106.5	6.8	90.7	16.5	0.19
+Parker           	53	8.4	45.6	152.4	0.04
+Placid           	8.5	7	2.5	12.8	0.49
+Puzzle           	87.6	7.5	85.5	20.1	1.1
+Rodman           	114	7	72.6	6.4	0.16
+Rousseau         	97.5	6.8	45.5	6.2	0.1
+Sampson          	11.8	5.9	24.2	1.6	0.48
+Shipp            	66.5	8.3	26	68.2	0.21
+Talquin          	16	6.7	41.2	24.1	0.86
+Tarpon           	5	6.2	23.6	9.6	0.52
+Tohopekaliga     	25.6	6.2	12.6	27.7	0.65
+Trafford         	81.5	8.9	20.5	9.6	0.27
+Trout            	1.2	4.3	2.1	6.4	0.94
+Tsala Apopka     	34	7	13.1	4.6	0.4
+Weir             	15.5	6.9	5.2	16.5	0.43
+Wildcat          	17.3	5.2	3	2.6	0.25
+Yale             	71.8	7.9	20.5	8.8	0.27
