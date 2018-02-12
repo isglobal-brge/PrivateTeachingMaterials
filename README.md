@@ -1,2 +1,2 @@
 # PrivateTeachingMaterials
-Teaching Material for privated courses
+Teaching Material for private courses
