@@ -1,0 +1,57 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,top=3cm,bottom=3cm,left=2cm,right=2cm]{geometry}
+%\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+\usepackage[pdftex]{color,graphicx,epsfig}
+\DeclareGraphicsRule{.pdftex}{pdf}{.pdftex}{}
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage[spanish]{babel}
+\usepackage[ansinew]{inputenc}
+
+
+
+\begin{document}
+
+
+\title{\bf Introduction to R}
+\date{}
+
+
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent {\bf TASK 1 - Using R:} File {\tt diet.dta} is a Stata database including information about several diseases and confounding variables (columns 1-16), nutrients (columns 17-26) and food consumption (columns 27-48). 
+
+ 
+\begin{enumerate}
+ \item Load data into R and save the information in an object called {\tt diet}.
+ \item How many samples are this database?
+ \item Create another database (object called {\tt diet.m}) containing only individuals with `Bachiller/BUP/COU' studies (variable {\tt estudios})
+ \item Print the table {\tt diet.m} for the rows 9,10,11 and 12
+ \item Which is the median weight (variable {\tt peso}) of all samples?
+ \item Which is the mean weight of each type of cancer (variable {\tt tipocancer}). HINT: type {\tt help(aggregate)} and investigate how to do this task.
+ \item Create a boxplot describing the variable {\tt t\_zinc} accross the different types of cancer (variable {\tt tipocancer})
+\end{enumerate}
+ 
+\bigskip
+
+
+\noindent {\bf TASK 2 - Data analysis with R:} Let us imagine that researchers are interested in determining those nutrients and foods that are associated with colorectal and breast cancer (variable {\tt tipocancer}). Let us perform such analysis using {\tt compareGroups} package:
+
+
+\begin{enumerate}
+ \item First, create another database called {\tt diet.cc} containing control individuals and those being diagnosed with colorectal and breast cancer ({\tt Control, Colorrectal, Mama})
+ \item Create a table describing whether patient's characteristics are comparable among cases and controls (variables {\tt edad,  sexo, estudios, peso, altura, mets\_10a, mets\_5a, Diabetes, Hipertensio, Colesterol})  
+ \item Create a table computing OR for control vs colorectal cancer for all variables but: {\tt id, casoc, casom, casop, casoe} and p-values for association and trend (NOTE: use subset argument in {\tt compareGroups} function to avoid creating more datasets)
+ \item Create the same table for breast cancer analysis 
+ \end{enumerate}
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

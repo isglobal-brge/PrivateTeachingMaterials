@@ -1,0 +1,143 @@
+---
+title: "DAGs estimation using Bayesian Network inference"
+output: html_document
+---
+
+## Install required packages
+
+Packages can be installed by executing
+
+```{r install_package, eval=FALSE}
+install.packages(c("abn", "graph", "ggm"))
+source("https://bioconductor.org/biocLite.R")
+biocLite("Rgraphviz")
+```
+
+# Load package
+
+There are other packages in R to fit DAGs. However, 'abn' is the more flexible one. It allows the analysis of different types of variables including gaussian, binomial or poisson variables. Let us load the package
+
+```{r load_package}
+library(abn)
+```
+  
+## Data analyzed
+
+Let us analyze food consumption and confounding variables in colorectal cancer
+
+```{r data}
+pp <- "c:/juan/CREAL/GitHub/biomarkers_multiple_tables/"
+load(file.path(pp, "data_exercises/diet.Rdata"))
+X <- cbind(X1[, c("casoc", "estudios", "peso", "mets_10a", "Colesterol")],
+           X3)
+dim(X)
+X <- X[complete.cases(X),]
+dim(X)
+```
+
+## Selecting the search method
+
+As a very rough rule of thumb if there are less than 20 variables (and no random effects) then probably the most robust model search option is an exact search (as opposed to a heuristic) which will identify a globally best DAG. Followed then by parametric bootstrapping in order to assess whether the identified model contains excess structure (this is an adjustment for over-modelling). 
+
+## Data preparation
+
+- Missing data must be imputed or complete cases selected
+- All variables treated as binary (0/1) must be coerced as factors
+- To include additional variables in the modeling, for example interaction terms or polynomials, then these must be created manually and included into the data.frame just like any other variable.
+
+```{r completecases}
+X.c <- X[complete.cases(X),]
+```
+
+## Estimating a simple model
+
+Let us define a particualar model 
+
+```{r model1}
+mydat <- X.c[, c("Colesterol", "gra_procmeat", "casoc")]
+mydists <- list(Colesterol="binomial",
+                gra_procmeat="gaussian",
+                casoc="binomial")
+mydag <- matrix(0, nrow=3, ncol = 3)
+rownames(mydag) <- colnames(mydag) <- c("Colesterol", "gra_procmeat", "casoc")
+mydag
+mydag["casoc", "Colesterol"] <- 1
+mydag["gra_procmeat", "Colesterol"] <- 1
+mydag["casoc", "gra_procmeat"] <- 1
+mydag
+```
+The DAG can be easily created using DAG function from ggm package!!!
+
+```{r dag}
+mydag2 <- ggm::DAG(Colesterol~casoc+gra_procmeat, gra_procmeat~casoc)
+mydag2
+```
+
+
+
+
+
+
+Now the model can be fitted by executing
+
+```{r fit_model1}
+model1 <- fitabn(dag.m=mydag, data.df = mydat, data.dists = mydists, 
+                 centre=TRUE, create.graph = TRUE)
+```
+
+The likelihood of this model can be obtained by
+
+```{r loglik1}
+model1$mlik
+```
+This model can be compared with the NULL model by
+
+```{r fit_model0}
+mydag0 <- matrix(0, nrow=3, ncol = 3)
+rownames(mydag0) <- colnames(mydag0) <- c("Colesterol", "gra_procmeat", "casoc")
+model0 <- fitabn(dag.m=mydag0, data.df = mydat, data.dists = mydists, 
+                 centre=TRUE, create.graph = TRUE)
+model0$mlik
+```
+
+
+## Drawing the DAG
+
+The graph can be easily obtained by (NOTE: create.graph was set equal to TRUE)
+
+```{r plot1}
+library(graph)
+plot(model1$graph)
+```
+
+## Select the best model
+
+We need to create extra objects:
+
+```{r select_best}
+ban <- retain <- matrix(0, nrow=ncol(mydat), ncol=ncol(mydat))
+colnames(ban) <- rownames(ban) <- names(mydat)
+colnames(retain) <- rownames(retain) <- names(mydat)
+max.par <- list(Colesterol=2,
+                gra_procmeat=2,
+                casoc=2)
+
+
+mycache<-buildscorecache(data.df=mydat, data.dists=mydists,
+                         dag.banned=ban, dag.retained=retain,
+                         max.parents = max.par)
+mp.dag<-mostprobable(score.cache=mycache)
+mod.best <- fitabn(dag.m=mp.dag, data.df=mydat,
+              data.dists=mydists, create.graph=TRUE)
+
+mod.best$mlik
+```
+The  best DAG is
+
+```{r dagbest}
+plot(mod.best$graph)
+```
+
+## Additive Bayesian Network project
+
+Additive Bayesian Network project including more features, examples and references can be found [here](http://www.r-bayesian-networks.org/)

@@ -1,0 +1,23 @@
+\frametitle{Model performance}
+
+Two biomarkers can be compared by
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{rocobj1} \hlkwb{<-} \hlkwd{plot.roc}\hlstd{(aSAH}\hlopt{$}\hlstd{outcome, aSAH}\hlopt{$}\hlstd{s100,}
+                    \hlkwc{main}\hlstd{=}\hlstr{"Statistical comparison"}\hlstd{,} \hlkwc{percent}\hlstd{=}\hlnum{TRUE}\hlstd{,} \hlkwc{col}\hlstd{=}\hlstr{"blue"}\hlstd{)}
+\hlstd{rocobj2} \hlkwb{<-} \hlkwd{lines.roc}\hlstd{(aSAH}\hlopt{$}\hlstd{outcome, aSAH}\hlopt{$}\hlstd{ndka,} \hlkwc{percent}\hlstd{=}\hlnum{TRUE}\hlstd{,} \hlkwc{col}\hlstd{=}\hlstr{"red"}\hlstd{)}
+\hlstd{testobj} \hlkwb{<-} \hlkwd{roc.test}\hlstd{(rocobj1, rocobj2)}
+\hlkwd{text}\hlstd{(}\hlnum{50}\hlstd{,} \hlnum{50}\hlstd{,} \hlkwc{labels}\hlstd{=}\hlkwd{paste}\hlstd{(}\hlstr{"p-value ="}\hlstd{,} \hlkwd{format.pval}\hlstd{(testobj}\hlopt{$}\hlstd{p.value)),} \hlkwc{adj}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{.5}\hlstd{))}
+\hlkwd{legend}\hlstd{(}\hlstr{"bottomright"}\hlstd{,} \hlkwc{legend}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{"S100B"}\hlstd{,} \hlstr{"NDKA"}\hlstd{),} \hlkwc{col}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{"blue"}\hlstd{,} \hlstr{"red"}\hlstd{),} \hlkwc{lwd}\hlstd{=}\hlnum{2}\hlstd{)}
+\end{alltt}
+\end{kframe}
+
+{\centering \includegraphics[width=2in]{figure/compareAUC-1}
+
+}
+
+
+
+\end{knitrout}

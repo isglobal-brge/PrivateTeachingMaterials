@@ -1,0 +1,52 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,top=3cm,bottom=3cm,left=2cm,right=2cm]{geometry}
+%\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+\usepackage[pdftex]{color,graphicx,epsfig}
+\DeclareGraphicsRule{.pdftex}{pdf}{.pdftex}{}
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage[spanish]{babel}
+\usepackage[ansinew]{inputenc}
+
+
+
+\begin{document}
+
+
+\title{\bf Mediation analysis}
+\date{}
+
+
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent {\bf TASK 1 - Mediation analysis:} File {\tt diet2.dta} is a Stata database including information about several diseases and confounding variables (columns 1-16), nutrients (columns 17-26) and food consumption (columns 27-48). 
+
+\smallskip
+
+\noindent Open an R Mardown document and perform the following tasks by writting comments to each step
+ 
+\begin{enumerate}
+ \item Load data into R and save the information in an object called {\tt diet}.
+ \item Let us imagine that researchers are interested in determining those nutrients and foods that are associated with colorectal cancer (variable {\tt cacoc}). Create another database called {\tt diet.cc} removing missing of variable {\tt casoc}
+ 
+ \begin{verbatim}
+ diet.cc <- diet[!is.na(diet$casoc),]
+ \end{verbatim}
+ 
+  \item Create a table describing whether patient's characteristics are comparable among cases and controls (variables {\tt edad,  sexo, estudios, peso, altura, mets\_10a, mets\_5a, Diabetes, Hipertensio, Colesterol}). NOTE: use the function {\tt export2md} to get a nice table into the .html output.  
+  
+ \item Create a table computing OR for control vs colorectal cancer for all variables but: {\tt id, tipocancer, casom, casop, casoe}. NOTE: use the function {\tt export2md} to get a nice table into the .html output. 
+ 
+ \item Perform mediation analysis considering colesterol as a mediator of the association observed between consumption of processed meat (variable {\tt gra\_conveniencefood}) and colorectal cancer (variable {\tt casoc}). NOTE: adjust the models by {\tt sexo}, {\tt t\_energy}, {\tt BMIhoy} and {\tt edad}.
+ \end{enumerate}
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

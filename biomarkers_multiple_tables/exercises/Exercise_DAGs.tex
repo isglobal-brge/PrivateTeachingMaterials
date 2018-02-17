@@ -1,0 +1,58 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,top=3cm,bottom=3cm,left=2cm,right=2cm]{geometry}
+%\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+\usepackage[pdftex]{color,graphicx,epsfig}
+\DeclareGraphicsRule{.pdftex}{pdf}{.pdftex}{}
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage[spanish]{babel}
+\usepackage[ansinew]{inputenc}
+
+
+
+\begin{document}
+
+
+\title{\bf Direct acyclic graphs (DAGs)}
+\date{}
+
+
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent {\bf TASK 1 - Comparing two DAGs:} Load data called {\tt diet.Rdata} by executing 
+
+\begin{verbatim}
+load(''data_exercises/diet.Rdata'')
+\end{verbatim}
+
+\noindent There are three databases called X1, X2 and X3. X1 contains outcome and confounding variables. X2 contains nutriens and X3 contains food consumption. 
+
+\begin{enumerate}
+\item Which is the likelihood of this DAG?
+
+\begin{center}
+ \includegraphics[width=8cm, height=8cm]{DAG}
+\end{center}
+
+\item Which is the best DAG that fits this data ({\tt mydat})?
+
+\begin{verbatim}
+vars1 <- c("casoc", "sexo", "peso", "mets_10a", "Colesterol")
+X <- cbind(X1[, vars1],  X3[,1:6])
+mydat <- X[complete.cases(X),]
+names(mydat)
+\end{verbatim}
+
+\end{enumerate}
+
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

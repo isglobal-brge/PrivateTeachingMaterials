@@ -1,0 +1,331 @@
+
+
+\documentclass[10pt,xcolor=dvipsnames]{beamer}
+\setbeamertemplate{navigation symbols}{}
+
+
+
+\usepackage{color}
+\usepackage{CREAL_slides}
+\usepackage[latin1]{inputenc}
+\usepackage{calc}
+\usepackage[loadonly]{enumitem}
+\usepackage{float}
+\usepackage[position=top,singlelinecheck=off]{subfig}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+
+\DeclareMathOperator{\argmax}{arg\,max}
+
+\newcommand{\X}{\mathbf{X}}
+
+
+
+\title[Multivariate methods in health studies]{Supervised Methods  \\ \small{in \\ Methods to integrate multiple tables in biomedical studies to detect biomarkers and stratify individuals \\ \medskip
+  Instituto de Salud Carlos III. Centro Nacional de Epidemiolog\'ia \\ September, 2017}}
+\author[Juan R Gonzalez]{Juan R Gonzalez}
+\institute[CREAL]{BRGE - Bioinformatics Research Group in Epidemiology \\
+		  Barcelona Institute for Global Health (ISGlobal) \\
+		           {\tt e-mail:juanr.gonzalez@isglobal.org} \\
+                  \url{http://www.creal.cat/brge} \\
+                  and Departament of Mathematics, UAB
+                  }
+
+\date{}
+
+\begin{document}
+
+
+<<setup, echo=FALSE>>=
+options(width = 80)
+library(knitr)
+opts_chunk$set(tidy=FALSE, size='footnotesize', warning=FALSE, cache=TRUE,
+               message=FALSE, fig.align='center', out.width='2in')
+@
+
+\frame{\titlepage}
+
+
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Supervised methods}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}{Supervised Methods}
+\textcolor{blue}{Logistic Regression:} LR Uses a model to predict the probability of having one characteristic or not.
+Linear Discriminant Analysis (LDA) can be as an extension of LR (more than two categories in the outcome).
+ \includegraphics{figures/LR.jpg}
+\end{frame}
+
+\begin{frame}{Supervised Methods}
+\textcolor{blue}{Classification Trees:}  A tree model resembles that of a linear model, 
+where the criterion is the factor indicating class membership and the predictor variables are the
+observed values for each variable.
+
+\medskip
+ \includegraphics{figures/tree.jpg}
+\end{frame}
+
+
+\begin{frame}{Supervised Methods}
+\textcolor{blue}{Support Vector Machine:} SVM finds separating lines (hyper planes) between groups of points.
+\bigskip
+ \includegraphics{figures/svm.jpg}
+\end{frame}
+
+
+\begin{frame}{Supervised Methods}
+\textcolor{blue}{Neural Networks:} NN are nonlinear models consisting of nonlinear hyperplanes around 
+ classes of objects given a set of prediction variables finds separating lines (hyper planes) between groups of points.
+ \includegraphics{figures/NN.jpg}
+\end{frame}
+
+
+\begin{frame}{Supervised Methods}
+\textcolor{blue}{Boosting:} Boosting is a combination of weak classifiers to produce a 
+   powerful committee. 
+
+\bigskip
+ \includegraphics{figures/boosting.jpg}
+\end{frame}
+
+\begin{frame}{Supervised Methods}
+\textcolor{blue}{Random Forest:} It can be seen as an extension of Boosting when using trees as a classifiers.
+
+\bigskip
+ \includegraphics{figures/RF.jpg}
+\end{frame}
+
+
+\begin{frame}[fragile]{Supervised methods}
+\textbf{Example:} {\tt oliveoil} data set represents eight chemical measurements 
+on different specimen of olive oil produced in various regions in 
+Italy (northern Apulia, southern Apulia, Calabria, Sicily, inland Sardinia 
+and coast Sardinia, eastern and western Liguria, Umbria) and further 
+classifiable into three macro-areas: Centre-North, South, Sardinia. 
+
+<<data2>>=
+library(pdfCluster)
+data(oliveoil)
+head(oliveoil)
+@
+\end{frame}
+
+
+\begin{frame}[fragile]{Supervised methods}
+<<dataTT>>=
+set.seed(1234)
+ss <- sample(1:nrow(oliveoil), 200)
+train <- oliveoil[-ss,-2]
+test <- oliveoil[ss,-2]
+@
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Linear discriminant analysis}
+<<lda>>=
+library(MASS)
+olive.lda <- lda(macro.area~., train)
+pregion.lda <- predict(olive.lda, test)$class
+table(test[,1], pregion.lda)
+@
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Linear discriminant analysis}
+<<ldaPlot>>=
+plot(predict(olive.lda, test)$x,
+     col=as.numeric(test[,1]))
+@
+\end{frame}
+
+
+\begin{frame}[fragile]{Classification Trees}
+<<trees>>=
+library(rpart)
+olive.rp <- rpart(macro.area~., train, 
+          method="class")
+olive.rp
+@
+\end{frame}
+
+
+\begin{frame}[fragile]{Classification Trees}
+<<treesPlot>>=
+plot(olive.rp)
+text(olive.rp)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Linear discriminant analysis}
+<<ldaPredict>>=
+temp <- predict(olive.rp, test)
+head(temp)
+pregion.rp <- apply(temp, 1, function(x) which(x==1))
+@
+\end{frame}
+
+\begin{frame}[fragile]{Linear discriminant analysis}
+<<ldaPredict2>>=
+table(test[,1], pregion.rp)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Support Vector Machine}
+<<svm>>=
+library(e1071)
+olive.svm <-  svm(macro.area ~. , data = train)
+pregion.svm <- predict(olive.svm, test)
+table(test[,1], pregion.svm)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Neural Network}
+<<nnet>>=
+library(nnet)
+olive.nnet <-  nnet(macro.area ~. , data = train,
+               size=2)
+pregion.nnet <- predict(olive.nnet, test, type="class")
+table(test[,1], pregion.nnet)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Neural Network}
+<<nnet2>>=
+olive.nnet <-  nnet(macro.area ~. , data = train,
+               size=4)
+pregion.nnet <- predict(olive.nnet, test, type="class")
+table(test[,1], pregion.nnet)
+@
+\end{frame}
+
+
+\begin{frame}[fragile]{Boosting}
+<<boost>>=
+library(adabag)
+olive.boost <-  boosting(macro.area ~. , data = train,
+                control = rpart.control(maxdepth = 2))
+pregion.boost <- predict(olive.boost, test, type="class")$class
+table(test[,1], pregion.boost)
+@
+\end{frame}
+
+\begin{frame}[fragile]{Random Forest}
+<<rf>>=
+library(randomForest)
+olive.rf <-  randomForest(macro.area ~. , data = train)
+pregion.rf <- predict(olive.rf, test, type="class")
+table(test[,1], pregion.rf)
+@
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Model performance}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[fragile]{Model performance}
+ \begin{itemize}
+   \item Rand Index (categorical biomarker)
+   \item ROC curve (continuous biomarker)
+ \end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}[fragile]{Model performance}
+\textbf{Rand Index: used in the class prediction problem}
+<<perf>>=
+library(flexclust)
+randIndex(table(test[,1], pregion.rf))
+randIndex(table(test[,1], pregion.lda))
+randIndex(table(test[,1], pregion.rp))
+randIndex(table(test[,1], pregion.boost))
+@
+\end{frame}
+
+
+
+
+
+\begin{frame}[fragile]{Model performance}
+Let us assume that we want to use different biomarkers (continuous) to predict and outcome. For instance, researchers want to use several clinical and one laboratory variable to predict 6-month outcome (Good and Poor) after having an aneurysmal subarachnoid haemorrhage (aSAH). These are the variables the collected at hospital admission
+
+<<ROC_1>>=
+library(pROC)
+data(aSAH)
+head(aSAH)
+@
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Model performance}
+Let us assume that we want to compute the AUC and its confidence interval for a given biomarker
+
+<<ROC_2>>=
+rocobj <- plot.roc(aSAH$outcome, aSAH$s100b,
+                main="Confidence intervals", 
+                percent=TRUE,
+                ci=TRUE,
+                print.auc=TRUE)
+@
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Model performance}
+A confidence band can be added
+
+<<ROC_3>>=
+rocobj <- plot.roc(aSAH$outcome, aSAH$s100b,
+                main="Confidence intervals", percent=TRUE,
+                ci=TRUE, 
+                print.auc=TRUE)
+ciobj <- ci.se(rocobj, progress = "none",
+               specificities=seq(0, 100, 5)) #This can be selected (grid for computing bands)
+plot(ciobj, type="shape", col="lightblue") # plot as a blue shape
+@
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Model performance}
+
+Two biomarkers can be compared by
+
+<<compareAUC>>=
+rocobj1 <- plot.roc(aSAH$outcome, aSAH$s100,
+                    main="Statistical comparison", percent=TRUE, col="blue")
+rocobj2 <- lines.roc(aSAH$outcome, aSAH$ndka, percent=TRUE, col="red")
+testobj <- roc.test(rocobj1, rocobj2)
+text(50, 50, labels=paste("p-value =", format.pval(testobj$p.value)), adj=c(0, .5))
+legend("bottomright", legend=c("S100B", "NDKA"), col=c("blue", "red"), lwd=2)
+@
+\end{frame}
+
+
+
+
+
+
+\end{document}
+
+
+
+
+

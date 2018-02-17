@@ -1,0 +1,16 @@
+base
+knitr
+pdfCluster
+MASS
+rpart
+e1071
+nnet
+randomForest
+lattice
+modeltools
+flexclust
+pROC
+mlbench
+ggplot2
+caret
+adabag

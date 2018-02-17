@@ -1,0 +1,32 @@
+---
+title: "Final exercise"
+author: "Juan R Gonzalez"
+date: "29 de septiembre de 2017"
+output: html_document
+---
+
+This chunk sets general options. 'include' stands for non-including the R code
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE, message = FALSE)
+```
+
+## Load libraries
+
+Let us load the libraries 
+
+```{r load, results=}
+library(made4)
+library(omicade4)
+library(readstata13)
+```
+
+## Load data
+
+## Run PCA
+
+We are using [made4](http://bioconductor.org/packages/release/bioc/html/made4.html) library
+
+
+![](c:/juan/34BiosketchISGlobal0181.jpg)
+

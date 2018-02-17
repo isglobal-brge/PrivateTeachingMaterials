@@ -1,0 +1,5 @@
+\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
+\beamer@sectionintoc {2}{Integrating two or more omic datasets}{14}{0}{2}
+\beamer@sectionintoc {3}{RGCCA}{39}{0}{3}
+\beamer@sectionintoc {4}{SGCCA}{61}{0}{4}
+\beamer@sectionintoc {5}{Recommended lectures}{70}{0}{5}

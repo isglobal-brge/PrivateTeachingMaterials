@@ -1,0 +1,23 @@
+\frametitle{SGCCA data analysis}
+
+The miRNA associated with ER+ (e.g. positive part of the first axis) are (NOTE:results are ordered)
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{ans} \hlkwb{<-} \hlkwd{selectVars}\hlstd{(sgcca.breast,} \hlkwc{table}\hlstd{=}\hlnum{2}\hlstd{,} \hlkwc{axis}\hlstd{=}\hlnum{1}\hlstd{,} \hlkwc{end}\hlstd{=}\hlstr{"pos"}\hlstd{)}
+\hlkwd{length}\hlstd{(ans)}
+\end{alltt}
+\begin{verbatim}
+## [1] 5
+\end{verbatim}
+\begin{alltt}
+\hlstd{ans}
+\end{alltt}
+\begin{verbatim}
+## [1] "hsa-mir-190b.MIMAT0004929"  "hsa-mir-342.MIMAT0004694"
+## [3] "hsa-mir-29b-2.MIMAT0004515" "hsa-mir-29c.MIMAT0004673"
+## [5] "hsa-mir-431.MIMAT0004757"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+

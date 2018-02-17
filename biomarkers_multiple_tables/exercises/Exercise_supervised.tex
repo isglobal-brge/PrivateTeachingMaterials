@@ -1,0 +1,62 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,top=3cm,bottom=3cm,left=2cm,right=2cm]{geometry}
+%\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+\usepackage[pdftex]{color,graphicx,epsfig}
+\DeclareGraphicsRule{.pdftex}{pdf}{.pdftex}{}
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage[spanish]{babel}
+\usepackage[ansinew]{inputenc}
+
+
+
+\begin{document}
+
+
+\title{\bf Supervised methods}
+\date{}
+
+
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent {\bf TASK 1 - Supervised methods:} File {\tt diet.dta} is a Stata database including information about several diseases and confounding variables (columns 1-16), nutrients (columns 17-26) and food consumption (columns 27-48). 
+
+ 
+\begin{enumerate}
+ \item Load data into R and save the information in an object called {\tt diet}.
+ \item Create a train database selecting 4000 samples randomly and a test database with the rest by executing:
+ 
+ \begin{verbatim}
+
+ library(readstata13)
+ diet <- read.dta13("data_exercises/diet.dta")
+
+ vars <- !names(diet)%in%c("id", "casoc", "casom", 
+                          "casop", "casoe")
+ diet <- diet[ , vars]
+ diet <- diet[complete.cases(diet),]
+ diet$tipocancer <- droplevels(diet$tipocancer)
+
+ 
+ set.seed(12345) 
+ sel <- sample(1:nrow(diet), 4000)
+ train <- diet[sel, ]
+ test <- diet[-sel,]
+ \end{verbatim}
+ 
+ \item Perform a variable selection using Random Forest and Linear Discriminat methods using train dataset to predict the different types
+ of cancer (variable {\tt tipocancer}).
+ \item Evaluate model performance using the test dataset. 
+\end{enumerate}
+ 
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

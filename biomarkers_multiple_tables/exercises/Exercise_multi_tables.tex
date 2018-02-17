@@ -1,0 +1,92 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,top=3cm,bottom=3cm,left=2cm,right=2cm]{geometry}
+%\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+\usepackage[pdftex]{color,graphicx,epsfig}
+\DeclareGraphicsRule{.pdftex}{pdf}{.pdftex}{}
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage[spanish]{babel}
+\usepackage[ansinew]{inputenc}
+
+
+
+\begin{document}
+
+
+\title{\bf Multi-tables data analysis}
+\date{}
+
+
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent {\bf TASK 1 - Multiple tables epidemiological data:} Load data called {\tt diet.Rdata} by executing 
+
+\begin{verbatim}
+load(''data_exercises/diet.Rdata'')
+\end{verbatim}
+
+There are three databases called X1, X2 and X3. X1 contains outcome and confounding variables. X2 contains nutriens and X3 contains food consumption. We aim to identify which table (nutrients or food consumption) can be used to explain the maximum varability of our data. 
+
+\begin{enumerate}
+ \item Create a list X to be passed through {\tt mcia} function. As there are missing data, and we are interested in analyzing complete cases, we should execute
+ \begin{verbatim}
+  sel <- complete.cases(X2) & complete.cases(X3)
+  X2.comp <- X2[sel,]
+  X3.comp <- X3[sel,]
+  X <- list(nut=t(X2.comp), food=t(X3.comp))
+ \end{verbatim}
+
+ \item Use multiple coinertia analysis ({\tt mcia}) to analyze this data an represent the top-2 variables associated to each axis
+ \item Perform PCA as we did in the previous tasks (that is, considering an unique table) by executing:
+  \begin{verbatim}
+    XX <- cbind(X2, X3)[sel,]
+    mm2 <- ord(t(XX))
+    plotgenes(mm2, nlab = 2)
+  \end{verbatim}
+ \item What is the IMPORTANT TAKE HOME MESSAGE we can draw from these analyses? 
+ 
+\end{enumerate}
+
+
+\bigskip
+
+\noindent {\bf TASK 2 - Multiple tables omic data:} File {\tt nci60.Rdata} contains miRNA, mRNA and protein data of melanoma, leukemia and CNS disease. Data are encapsulated in a list where each components stands for a given omic data (NOTE: features are in rows and samples in columns). Data corresponds to cells lines from the NCI-60 panel available at TCGA project. 21 cell lines are providing information about 537 miRNAs, 12,895 gene expression and 7,016 proteins. We are interested in obtaining omic profiles to characterize those diseases. NOTE: The vector {\tt cancer} is a factor variable indicating  the type of cancer of each sample.  
+
+ 
+\begin{enumerate}
+ \item Load data into R by executing \texttt{load(``/data\_exercises/nci60.Rdata'')}.
+ \item Perform multi coinertia analysis and provide the top-5 features (they can be proteins, miRNA or mRNA) associated with each tumor. Which are the tables that are explaining the vast majority of the variance of two first axes? (NOTE: look at the pseudoeigen plot)
+\item Get the top 5 genes (mRNA) more associated with Leukemia
+\item Get the top 5 miRNA associated with Melanoma
+\item Get the top 5 proteins associated with CNS
+\end{enumerate}
+ 
+\bigskip
+
+\noindent {\bf TASK 3 - Supervised methods:} Using the data described in task 2: 
+
+\begin{enumerate}
+ \item Perform SGCCA to determine those miRNA that are associated with each tumor. NOTE: the fourth table (e.g. cancer status) can be created by typing:
+ 
+ \begin{verbatim}
+   Y <- model.matrix( ~ cancer)[,-1]
+ \end{verbatim}
+
+\end{enumerate}
+
+\noindent NOTE: Do not forget to load the R functions that may help you to visualize the results
+ \begin{verbatim}
+source("Day3-integration_multiple_tables/R/plotInd.R")
+source("Day3-integration_multiple_tables/R/selectVars.R")
+\end{verbatim}
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

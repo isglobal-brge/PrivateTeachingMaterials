@@ -1,0 +1,1009 @@
+
+
+\documentclass[10pt,xcolor=dvipsnames]{beamer}
+\setbeamertemplate{navigation symbols}{}
+
+
+
+\usepackage{color}
+\usepackage{CREAL_slides}
+\usepackage[latin1]{inputenc}
+\usepackage{calc}
+\usepackage[loadonly]{enumitem}
+\usepackage{float}
+\usepackage[position=top,singlelinecheck=off]{subfig}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+
+\DeclareMathOperator{\argmax}{arg\,max}
+
+\newcommand{\X}{\mathbf{X}}
+\newcommand{\ma}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\y}{\mathbf{y}}
+\newcommand{\mba}{\mathbf{a}}
+
+
+\title[Multivariate methods in health studies]{Integration of muliple tables  \\ \small{in \\ Methods to integrate multiple tables in biomedical studies to detect biomarkers and stratify individuals \\ \medskip
+  Instituto de Salud Carlos III. Centro Nacional de Epidemiolog\'ia \\ September, 2017}}
+\author[Juan R Gonzalez]{Juan R Gonzalez}
+\institute[CREAL]{BRGE - Bioinformatics Research Group in Epidemiology \\
+		  Barcelona Institute for Global Health (ISGlobal) \\
+		           {\tt e-mail:juanr.gonzalez@isglobal.org} \\
+                  \url{http://www.creal.cat/brge} \\
+                  and Departament of Mathematics, UAB
+                  }
+
+\date{}
+
+\begin{document}
+
+
+<<setup, echo=FALSE>>=
+options(width = 80)
+library(knitr)
+opts_chunk$set(tidy=FALSE, size='footnotesize', warning=FALSE, cache=TRUE,
+               message=FALSE, fig.align='center', out.width='2in')
+@
+
+\frame{\titlepage}
+
+
+\begin{frame}[plain]{Outline}
+\tableofcontents
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}[plain]\frametitle{Introduction}
+
+\begin{itemize}
+\item Undersanding the genetic basis of \textcolor{OliveGreen}{complex traits} is an open question for may researchers
+\pause
+\item Recent advances in technology has made this problem even more complex by incorporating other pieces
+of information such as neuroimaging, daily measurements of enviromental exposures among others
+\pause
+\item The main challenge is to analyze the vast amount of data that is being generated, particularly how to integrate information from different tables
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[plain]\frametitle{Introduction}
+
+\begin{figure}
+\begin{center}
+ \includegraphics[height=6cm, width=6.5cm]{figures/general_omic_data.png}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}[plain]\frametitle{Introduction}
+
+\begin{figure}
+\begin{center}
+ \includegraphics[height=6cm, width=6cm]{figures/supervised_multi_omic.png}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+
+
+\begin{frame}[plain]\frametitle{Introduction}
+ \begin{figure}
+ \begin{center}
+   \includegraphics[height=6cm, width=5cm]{figures/non_supervised_multi_omic.png}
+  \end{center}
+ \end{figure}
+\end{frame}
+
+
+
+\begin{frame}[plain]\frametitle{Introduction}
+
+\begin{itemize}
+\item Data integration (Integrative bioinformatics, integrated
+analysis, crossomics, multi-dataset analysis, data fusion, ...) is being crucial in Bioinformatics/Biology/Epidemiology
+\item Data integration may refer to different aspects
+  \begin{itemize}
+   \item Computational combination of data (sets)
+   \item Simultaneous analysis of different variables from different tables, different time points, different tissues, ...
+   \item Provide biological insights by using information from existing databases (ENCODE, GTEX, KEGG, ...)
+  \end{itemize}
+\item Here we mean the process by which different types of data are combined as predictor
+variables to allow more thorough and comprehensive modelling of complex traits or phenotypes
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[plain]\frametitle{Types of meta-dimensional analyses}
+
+\begin{figure}
+\begin{center}
+ \includegraphics[height=7cm, width=6cm]{figures/meta_dimensional.jpg}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+
+
+
+\begin{frame}[plain]\frametitle{Mendelian randomization}
+
+\begin{figure}
+  \includegraphics[height=4cm, width=6cm]{figures/mendelian_randomization.png}
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}[plain]\frametitle{Conditional Tests}
+
+\begin{figure}
+  \includegraphics[height=5cm, width=7cm]{figures/CIT.png}
+\end{figure}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Integrating two or more omic datasets}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{frame}[plain]\frametitle{Multiple dataset: dimensionality reduction}
+
+\begin{figure}
+\begin{center}
+ \includegraphics[height=5.5cm, width=6cm]{figures/multi_example.jpg}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}[plain]\frametitle{Integrating two or more datasets}
+
+\begin{itemize}
+\item There are methods based on dimension reduction techniques: generalized SVD, Co-Inertia Analysis (CIA), sparse or penalized extensions of Partial Least Squares (PLS),
+Canonical Correlation (CCA), Multiple Factor Analysis (MFA), Generalized Canonical Correlation (GCA)
+\pause
+\item There are methods that are based on path modelling: structural equation models (SEM)
+\pause
+\item Reguralized Generalized Canonical Correlation (RGCA) provides a unified framework for different approaches (Tenenhaus, M. and Tenenhaus, A. Psychometrika, 2011, 76(2):257-284). Other methods are special cases of RGCA.
+\pause
+\item RGCA integrates a feature selection method, named sparse GCCA (SGCCA) (Tenenhaus, A et al. Biostatistics, 2014, 15(3):569-83).
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\begin{frame}[plain]\frametitle{Integrating two or more datasets}
+
+\begin{itemize}
+\item Canonical Correlation can be seen as an extension of PCA for more than two tables $X$ and $Y$
+\item The two datasets can be decomposed as:
+$$ f =Xp $$ $$ g =Yq $$
+where $p$ and $q$ are the loading vectors
+\item CCA searches for association or correlations among $X$ and $Y$ by
+$$ \argmax_{p^i q^i} \text{cor}(Xp^i Yq^i)$$
+for the $i$-th component
+\item $Xp^i$ and $Yq^i$ are known as canonical variates and their correlations are the canonical correlations.
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[plain]{Integrating two or more datasets}
+
+\begin{itemize}
+\item ($p >> n$) is an issue. Additionally, there is often presence of multicollinearity within both sets of variables that requires a reguralization step.
+\item This may accomplished by addign a ridge penalty, that is, adding a multiple of the identity matrix to the correlation/covariance matrix.
+$$ \argmax_{p^i q^i} \text{cor}(Xp^i Yq^i) + \lambda \text{I}$$
+
+\item A sparse solution (filtering the number of variables) is the solution: pCCA, sCCA, CCA-l1, CCA-EN, CCA-group sparse have been used to integrate two omic data.
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[plain]\frametitle{Integrating two or more datasets}
+
+\begin{figure}
+\begin{center}
+ \includegraphics[height=3.5cm, width=6cm]{figures/canonical_correlation.jpg}
+\end{center}
+\end{figure}
+
+$V_y$ and $V_x$ are selected to maximize:
+
+\begin{itemize}
+ \item Correlation (CCA)
+ \item Squared Covariance (CIA)
+       $$ \argmax_{p^i q^i} \text{cov}^2(Xp^i Yq^i)$$
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[plain]\frametitle{Canonical Correlation}
+
+\begin{itemize}
+\item CCA has been used in omic data
+\item The main limitation is that the number of features generally greatly exceeds the number of observations
+\item Consequence 1: parameter estimation cannot be applied using standard methods
+\item  Consequence 2: Most of markers are having no effect in the canonical axes (e.g. almost all components in a and b are 0)
+\item Penalized (sparse) CCA has been proposed
+\item Main advantages: More than two tables, easy interpretation (do not need computing p-values nor correcting for multiple comparisons)
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}[plain]\frametitle{Sparse canonical correlation}
+
+\begin{figure}
+\begin{center}
+ \includegraphics[height=5cm, width=8cm]{figures/mCCA.png}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[plain]{Co-Inertia}
+
+\begin{itemize}
+
+  \item CIA does not requires an inversion step of the covariance matrix; thus, regularization or penalization implementation is not required
+  \item CIA can deal with disperse variables
+  \item CIA does consider quantitative or qualitative variables
+  \item Can weight cases
+  \item The method provides the RV coefficient. This is a measure of global similarity between the datasets, and is a number between 0 and 1. The closer it is to 1 the greater the global similarity between the two datasets.
+ \end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile, plain]{Data analysis illustration}
+
+\begin{itemize}
+  \item Data from the Cancer Genome Atlas (TCGA) will be analyzed.
+  \item A subset of the TCGA breast cancer study from Nature 2012 publication have been selected.
+  \item Data {\tt https://tcga-data.nci.nih.gov/docs/publications/brca\_2012/}.
+  \item Available data are: miRNA, miRNAprecursor, RNAseq, Methylation, proteins from a RPPA array, and  GISTIC SNP calls (CNA and LOH). Clinical data are also available.
+  \item We are interested in comparing women with ER+ vs ER-.
+ \end{itemize}
+ <<load_data>>=
+load("data/breast_TCGA.RData")
+group <- droplevels(breast_multi$clin$ER.Status)
+@
+\end{frame}
+
+
+
+\begin{frame}[fragile, plain]\frametitle{Canonical Correlation: gene expression and proteins}
+
+<<data_cc>>=
+require(CCA)
+df1 <- t(breast_multi$RNAseq)[,1:1000]
+df2 <- t(breast_multi$RPPA)
+@
+
+<<cc, eval=FALSE>>=
+resCC <- cc(df1, df2)
+@
+
+
+\begin{verbatim}
+Error en chol.default(Bmat) :
+  la submatriz de orden 81 no es definida positiva
+\end{verbatim}
+
+<<rcc, cache=TRUE>>=
+resRCC <- rcc(df1, df2, 0.2, 0.1)
+@
+
+<<regul_estim, eval=FALSE>>=
+regul <- estim.regul(df1, df2)
+resRCC2 <- rcc(df1, df2, regul$lambda1, regul$lambda2)
+@
+
+<<plot_rcc, fig.show='hide'>>=
+plt.cc(resRCC)
+@
+
+\end{frame}
+
+
+\begin{frame}[fragile, plain]\frametitle{Canonical Correlation: gene expression and proteins}
+
+<<plot_rcc_out, echo=FALSE>>=
+plt.cc(resRCC)
+@
+
+\end{frame}
+
+
+
+
+\begin{frame}[fragile, plain]\frametitle{Canonical Correlation: gene expression and proteins}
+
+
+<<multiCCA>>=
+require(PMA)
+ddlist <- list(df1, df2)
+perm.out <- MultiCCA.permute(ddlist,
+                             type=c("standard", "standard"),
+                             trace=FALSE)
+resMultiCCA <- MultiCCA(ddlist,
+                        penalty=perm.out$bestpenalties,
+                        ws=perm.out$ws.init,
+                        type=c("standard", "standard"),
+                        ncomponents=1, trace=FALSE, standardize=TRUE)
+@
+
+NOTE: setting {\tt type} equal to "ordered" allows to consider that features are correlated (e.g. genomic regions)
+\end{frame}
+
+
+\begin{frame}[fragile, plain]\frametitle{Canonical Correlation: gene expression and proteins}
+
+<<multiCCA_out, size='scriptsize'>>=
+rownames(resMultiCCA$ws[[1]]) <- colnames(df1)
+rownames(resMultiCCA$ws[[2]]) <- colnames(df2)
+head(resMultiCCA$ws[[1]])
+head(resMultiCCA$ws[[2]])
+@
+
+NOTE: we are interested in selecting those features having a coefficient (\texttt{ws}) different from 0.
+
+\end{frame}
+
+
+
+
+
+\begin{frame}[fragile, plain]\frametitle{Co-inertia: gene expression and proteins}
+
+Let us load required packages (coinertia and multiple coinertia)
+<<getcia>>=
+library(made4)
+library(omicade4)
+@
+
+<<cia, cache=TRUE>>=
+resCIA <- cia(breast_multi$RNAseq, breast_multi$RPPA)
+@
+
+<<plot_cia, fig.show='hide'>>=
+plot(resCIA, classvec=group, nlab=3, clab=0, cpoint=3 )
+@
+
+\end{frame}
+
+
+
+\begin{frame}[fragile, plain]\frametitle{Co-inertia: gene expression and proteins}
+
+\begin{figure}
+\begin{center}
+ \includegraphics[width=6cm]{figure/plot_cia-1}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}[fragile, plain]\frametitle{Co-inertia: gene expression and proteins}
+
+Top-5 features of the first axis (positive side) can be retrieve by
+
+\footnotesize
+<<top_features>>=
+topVar(resCIA, axis=1, topN=5, end="positive")
+@
+
+\end{frame}
+
+
+
+\begin{frame}[fragile, plain]\frametitle{Co-inertia: gene expression and proteins}
+
+Top-5 features of the first axis (negative side) can be retrieve by
+
+\footnotesize
+<<top_features_neg>>=
+topVar(resCIA, axis=1, topN=5, end="negative")
+@
+
+\end{frame}
+
+
+
+\begin{frame}[fragile, plain]\frametitle{More than two tables}
+
+
+<<mcia, cache=TRUE>>=
+resMCIA <- mcia( breast_multi[ c(1,3,4,5,6,7) ] )
+@
+
+
+<<plot_mcia, fig.show='hide'>>=
+plot(resMCIA, axes=1:2, sample.lab=FALSE, sample.legend=FALSE,
+     phenovec=group, gene.nlab=2,
+     df.color=c("cyan", "magenta", "red4", "brown","yellow", "orange"),
+     df.pch=2:7)
+@
+\end{frame}
+
+
+\begin{frame}[fragile, plain]\frametitle{More than two tables}
+
+\begin{figure}
+\begin{center}
+ \includegraphics[width=5.5cm]{figure/plot_mcia-1}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile, plain]\frametitle{More than two tables}
+
+Top-5 features of the first axis (positive side) can be retrieve by
+
+\scriptsize
+<<top_features_m>>=
+topVar(resMCIA, end="positive", axis=1, topN=5)
+@
+
+\end{frame}
+
+
+
+\begin{frame}[fragile, plain]\frametitle{More than two tables}
+
+<<plot_eigen, fig.show='hide'>>=
+plot(resMCIA$mcoa$cov2,  xlab = "pseudoeig 1",
+     ylab = "pseudoeig 2", pch=19, col="red")
+text(resMCIA$mcoa$cov2, labels=rownames(resMCIA$mcoa$cov2),
+     cex=1.4, adj=0)
+@
+
+\begin{figure}
+\begin{center}
+ \includegraphics[width=5.5cm]{figure/plot_eigen-1}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{RGCCA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}[plain]\frametitle{RGCCA}
+
+\begin{itemize}
+ \item RGCCA allows to combine tables with different types of variables between blocks
+ \item The objective of RGCCA is to find, for each block (talbe), a weighted composite of variables (called block component) $\y_j= \X_j \ma a_j,j=1, \ldots,J$ (where $\ma a_j$ is a column-vector with  $p_j$ elements) summarizing the relevant information between and within the blocks. 
+ \item The block components are obtained such that (i) block components explain well their own block and/or (ii) block components that are assumed to be connected are highly correlated. 
+ \item RGCCA has been extended to integrate a variable selection procedure, called SGCCA, allowing the identification of the most relevant features.
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[plain]\frametitle{RGCCA}
+
+RGCCA (Tenenhaus, M. et al. Psychometrika, 2001 and Tenenhaus A et al, Psychometrika, 2017) is defined as the next optimization problem:
+
+\begin{equation*}
+\displaystyle \underset{\ma a_1,\ma a_2, \ldots,\ma a_J}{\text{maximize}} \sum_{j, k = 1}^J c_{jk}g(\mathrm{cov}(\X_j\ma a_j, \X_k\ma a_k)) \\ \mathrm{~~s.t.~~} (1-\tau_j)\mathrm{var}(\X_j\ma a_j) + \tau_j\Vert \ma a_j \Vert^2 = 1, j=1, \ldots,J
+\end{equation*}
+
+\end{frame}
+
+
+\begin{frame}[plain]\frametitle{RGCCA}
+
+\begin{itemize}
+ \item The scheme function $g$ is any continuous convex function and allows to consider different optimization criteria.  
+  \begin{itemize}
+   \item identity (horst scheme, leading to maximizing the sum of covariances between block components)
+   \item the absolute value (centroid scheme, yielding maximization of the sum of the absolute values of the covariances)
+   \item the square function (factorial scheme, thereby maximizing the sum of squared covariances)
+   \item any even integer $m$, $g(x) = x^m$  
+  \end{itemize} 
+  \item A fair model is a model where all blocks contribute equally to the solution ($m=1$)
+  \item $m>1$ is preferable if the user wants to discriminate between blocks. 
+  \item In practice, $m$ is equal to $1$, $2$ or $4$. The higher the value of $m$ the more the method acts as block selector
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[plain]\frametitle{RGCCA}
+
+The design matrix $\ma C$ is a symmetric  $J \times J$ matrix of nonnegative elements describing the network of connections between blocks that the user wants to take into account. Usually, $c_{jk}=1$ for two connected blocks and 0 otherwise.
+
+\end{frame}
+
+\begin{frame}[plain]\frametitle{RGCCA}
+
+
+\begin{figure}
+\begin{center}
+ \includegraphics[height=6cm, width=6.5cm]{figures/rgcca.png}
+\end{center}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}[plain]\frametitle{RGCCA}
+
+The $\tau_j$  are called shrinkage parameters ranging from $0$ to $1$ and interpolate smoothly between maximizing the covariance and maximizing the correlation
+
+\begin{itemize}
+ \item $\tau_j=1$ yields the maximization of a covariance-based criterion. It is recommended when the user wants a stable component (large variance) while simultaneously taking into account the correlations 
+between blocks. The user must, however, be aware that variance dominates over correlation.
+    \item $\tau_j=0$ yields the maximization of a correlation-based criterion. It is recommended when the user wants to maximize correlations between connected components. This option can yield unstable solutions in case of multi-collinearity and cannot be used when a data block is rank deficient (e.g. $n<p_j$).
+    \item $0<\tau_j<1$ is a good compromise between variance and correlation: the block components are simultaneously stable and as well correlated as possible with their connected block components. This setting can be used when the data block is rank deficient. 
+
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile, plain]\frametitle{PCA as RGCCA}
+
+Principal Component Analysis is defined as the following optimization problem 
+
+\begin{equation*}
+\underset{\ma a}{\text{maximize}} \text{~~var}\left(\X \ma a \right) \mathrm{~s.t.~} \Vert \ma a \Vert = 1
+\label{PCA1}
+\end{equation*}
+
+and is obtained with the `rgcca()` function as follows:
+
+<<rgcca_pca, eval=FALSE>>=# one block X 
+# Design matrix C
+# Shrinkage parameters tau = c(tau1, tau2)
+
+pca.with.rgcca = rgcca(A = list(X, X), 
+                       C = matrix(c(0, 1, 1, 0), 2, 2),
+                       tau = c(1, 1))
+@
+\end{frame}
+
+
+\begin{frame}[fragile, plain]\frametitle{CCA as RGCCA}
+
+Canonical Correlation Analysis is defined as the following optimization problem 
+
+\begin{equation*}
+\underset{\ma a_1, \ma a_2}{\text{maximize}} \text{
+~~cor}\left(\X_1\ma a_1, \X_2\ma a_2 \right) \mathrm{~s.t.~} \text{var}(\X_1\ma a_1) = \text{var}(\X_2\ma a_2) = 1
+\label{CCA}
+\end{equation*}
+
+and is obtained with the `rgcca()` function as follows:
+
+
+<<rgcca_cca, eval=FALSE>>=
+# X1 = Block1 and X2 = Block2 
+# Design matrix C
+# Shrinkage parameters tau = c(tau1, tau2)
+
+cca.with.rgcca = rgcca(A= list(X1, X2), 
+                       C = matrix(c(0, 1, 1, 0), 2, 2),
+                       tau = c(0, 0))
+@
+
+\end{frame}
+
+
+
+
+\begin{frame}[fragile, plain]\frametitle{PLS as RGCCA}
+PLS regression is defined as the following optimization problem 
+
+\begin{equation*}
+\underset{\ma a_1, \ma a_2}{\text{maximize}} \text{
+~~cov}\left(\X_1\ma a_1, \X_2\ma a_2 \right) \mathrm{~s.t.~} \Vert \ma a_1 \Vert = \Vert \ma a_2 \Vert = 1
+\label{PLS}
+\end{equation*}
+
+and is obtained with the `rgcca()` function as follows:
+
+
+<<rgcca_pls, eval=FALSE>>=
+# X1 = Block1 and X2 = Block2 
+# Design matrix C
+# Shrinkage parameters tau = c(tau1, tau2)
+
+pls.with.rgcca = rgcca(A= list(X1, X2), 
+                       C = matrix(c(0, 1, 1, 0), 2, 2),
+                       tau = c(1, 1))
+@
+
+
+\end{frame}
+
+
+
+\begin{frame}[fragile, plain]\frametitle{RDA as RGCCA}
+
+Redundancy Analysis of $\X_1$ with respect to $\X_2$ is defined as the following optimization problem 
+
+\begin{equation*}
+\underset{\ma a_1, \ma a_2}{\text{maximize}} \text{
+~~cor}\left(\X_1 \ma a_1, \X_2 \ma a_2 \right) \times \text{
+var}\left(\X_1\ma a_1\right)^{1/2} \mathrm{~s.t.~} \Vert \ma a_1 \Vert = \text{var}(\X_2\ma a_2) = 1
+\label{RA}
+\end{equation*}
+
+and is obtained with the `rgcca()` function as follows:
+
+<<rgcca_rda, eval=FALSE>>=
+# X1 = Block1 and X2 = Block2 
+# Design matrix C
+# Shrinkage parameters tau = c(tau1, tau2)
+
+ra.with.rgcca = rgcca(A= list(X1, X2), 
+                       C = matrix(c(0, 1, 1, 0), 2, 2),
+                       tau = c(1, 0))
+@
+\end{frame}
+
+\begin{frame}[fragile, plain]\frametitle{GCCA as RGCCA}
+
+For Generalized Canonical Correlation Analysis (GCCA), a superblock $\ma X_{J+1} = \left[\ma X_1, \dots, \ma X_J \right]$ defined as the concatenation of all the blocks is introduced. GCCA is defined as the following optimization problem 
+
+\begin{equation*}
+\underset{\ma a_1, \ma a_2, \ldots,\ma a_J} {\text{maximize}} \displaystyle \sum_{j=1}^J \text{cor}^2(\ma X_j\ma a_j, \ma X_{J+1}\ma a_{J+1}) \text{~~s.t~~} \text{var}(\X_j \ma a_j) = 1, j=1, \ldots, J+1
+\end{equation*}
+
+and is obtained with the `rgcca()` function as follows:
+<<gcca_rgcca, eval = FALSE>>= 
+# X1 = Block1, ..., XJ = BlockJ, X_{J+1} = [X1, ..., XJ]
+# (J+1)*(J+1) Design matrix C
+C = matrix(c(0, 0, 0, ..., 0, 1,
+             0, 0, 0, ..., 0, 1,
+                    ...
+             1, 1, 1, ..., 1, 0), J+1, J+1)
+# Shrinkage parameters tau = c(tau1, ...,  tauJ, tau_{J+1})
+gcca.with.rgcca = rgcca(A= list(X1, ..., XJ, cbind(X1, ..., XJ)), 
+                       C = C, tau = rep(0, J+1),
+                       scheme = "factorial")
+@
+\end{frame}
+
+
+\begin{frame}[fragile, plain]\frametitle{MCIA as RGCCA}
+
+For Multiple Co-Inertia Analysis (MCIA) a superblock $\ma X_{J+1} = [\ma X_1, \dots, \ma X_J$ defined as the concatenation of all the blocks is introduced. MCIA is defined as the following optimization problem 
+
+\begin{equation}
+\underset{\ma a_1, \ma a_2, \ldots,\ma a_J} {\text{maximize}} \displaystyle \sum_{j=1}^J \text{cor}^2(\ma X_j\ma a_j, \ma X_{J+1}\ma a_{J+1})\times \text{var}(\X_j\ma a_j), \text{~~s.t~~} \Vert \ma a_j \Vert = 1, j=1, \ldots, J \text{~~and~~} \text{var}(\X_{J+1}\ma a_{J+1}) = 1
+\end{equation}
+
+and is obtained with the `rgcca()` function as follows:
+<<mcia_rgcca, eval = FALSE>>=
+# X1 = Block1, ..., XJ = BlockJ, X_{J+1} = [X1, ..., XJ]
+# (J+1)*(J+1) Design matrix C
+C = matrix(c(0, 0, 0, ..., 0, 1,
+             0, 0, 0, ..., 0, 1,
+                  ...
+             1, 1, 1, ..., 1, 0), J+1, J+1)
+# Shrinkage parameters tau = c(tau1, ...,  tauJ, tau_{J+1})
+mcoa.with.rgcca = rgcca(A= list(X1, ..., XJ, cbind(X1, ..., XJ)), 
+                       C = C, tau = c(rep(1, J), 0),
+                       scheme = "factorial")
+@
+\end{frame}
+
+
+
+
+\begin{frame}[fragile, plain]\frametitle{RGCCA data analysis}
+
+Data must be preprocessed to ensure comparability between variables.  Standardization is applied (zero mean and unit variance). 
+
+<<rgcca_1>>=
+library(RGCCA)
+load("data/breast_TCGA.RData")
+X <- t(breast_multi$RNAseq)
+Y <- t(breast_multi$miRNA)
+Z <- t(breast_multi$RPPA)
+A <- list(rnaseq=X, miRNA=Y, RPPA=Z)
+A <- lapply(A, scale)
+@
+
+NOTE: A possible strategy is to standardize the variables and then to divide each block by the square root of its number of variables. This two-step procedure leads to $\mathrm{tr}(\ma X_j^t \ma X_j )=n$  for each block (i.e. the sum of the eigenvalues of the covariance matrix of $\ma X_j$ is equal to $1$ whatever the block). Such a preprocessing is reached by setting the `scale` argument to `TRUE` (default value) in the `rgcca()` and `sgcca()` functions.
+
+
+
+\end{frame}
+
+
+\begin{frame}[fragile, plain]\frametitle{RGCCA data analysis}
+
+Let us assume that both miRNA and mRNa are affecting the protein levels. Therefore the $\ma C$ matrix will be
+
+<<C>>=
+C <- matrix(c(1,0,1,0,1,1,0,0,1), nrow=3, byrow = TRUE)
+C
+@
+
+\end{frame}
+
+
+\begin{frame}[fragile, plain]\frametitle{RGCCA data analysis}
+
+RGCCA using the defined design matrix $\ma C$, the factorial scheme ($g(x) = x^2$) and mode B for all blocks (full correlation criterion) is obtained by
+
+<<rgcca.factorial, cache=TRUE>>=
+rgcca.factorial <- rgcca(A, C=C, tau = rep(0, 3), 
+                           scheme ="factorial", ncomp=c(2,2,2),
+                           scale = FALSE, verbose = FALSE)
+@
+
+The weight vectors, solution of the optimization problemare obtained as:
+
+<<sol, eval=FALSE>>=
+rgcca.factorial$a # weight vectors
+@
+
+\end{frame}
+
+
+\begin{frame}[fragile, plain]\frametitle{RGCCA data analysis}
+
+The block-components are also avalaible as output of `rgcca`. The first components of each block are given by:
+
+<<block>>=
+Y.block <- rgcca.factorial$Y
+lapply(Y.block, head)
+@
+\end{frame}
+
+
+
+\begin{frame}[fragile, plain]\frametitle{RGCCA data analysis}
+
+Information about Average Variance Explained (AVE)
+
+- The AVE of block $\ma X_j$, denoted by AVE($\ma X_j$), is defined as:
+
+\begin{equation*}
+\mathrm{AVE}(\ma X_j)=  1/p_j \sum_{h=1}^{p_j} cor^2( \ma x_{jh},\ma y_j)
+\end{equation*}
+
+AVE($\ma X_j$) varies between 0 and 1 and reflects the proportion of variance captured by $\ma y_j$.
+
+- For all blocks:
+
+\begin{equation*}
+\displaystyle \mathrm{AVE(outer model)} = \left( 1/\sum_j p_j \right) \sum_j p_j \mathrm{AVE}(\ma X_j)
+\end{equation*}
+
+- For the inner model:
+
+\begin{equation*}
+\displaystyle \mathrm{AVE(inner model)} = \left( 1/\sum_{j<k} c_{jk} \right) \sum_{j<k} c_{jk} \mathrm{cor}^2(\ma y_j , \ma y_k)
+\end{equation*}
+
+\end{frame}
+
+
+\begin{frame}[fragile, plain]\frametitle{RGCCA data analysis}
+
+<<ave>>=
+rgcca.factorial$AVE
+@
+
+\end{frame}
+
+
+\begin{frame}[fragile, plain]\frametitle{RGCCA data analysis}
+
+Plot individuals
+
+<<rgcca_ind, fig.show='hide'>>=
+source("R/plotInd.R")
+plotInd(rgcca.factorial, group)
+@
+\end{frame}  
+
+
+
+\begin{frame}[fragile, plain]\frametitle{RGCCA data analysis}
+
+\begin{figure}
+\begin{center}
+ \includegraphics[width=5.5cm]{figure/rgcca_ind-1}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+
+\begin{frame}[fragile, plain]\frametitle{RGCCA data analysis}
+
+Features first axis right side (e.g. ER+)
+
+<<miRNA>>=
+source("R/topVars.R")
+topVars(rgcca.factorial, axis=1, end="pos", topN=5)
+@
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{SGCCA}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[fragile, plain]\frametitle{SGCCA data analysis}
+
+SGCCA extends RGCCA to address the issue of variable selection. Specifically, RGCCA with all $\tau_j=1$ equal to 1 is combined with an L1-penalty that gives rise to SGCCA (Tenenhaus et al, Biostatistics, 2014). The SGCCA optimization problem is defined as follows:
+
+\begin{equation*}
+\displaystyle \underset{\mba_1,\mba_2, \ldots,\mba_J}{\text{maximize}} \sum_{j, k = 1}^J c_{jk}g(\mathrm{cov}(\X_j\ma a_j, \X_k\ma a_k)) \mathrm{~~s.t.~~} \Vert \mba_j \Vert_2 = 1 \text{~and~} \Vert \mba_j \Vert_1 \le s_j, j=1,\ldots,J
+\label{optim_SGCCA}
+\end{equation*}
+
+where $s_j$ is a user defined positive constant that determines the amount of sparsity for $\ma a_j, j=1, \ldots,J$. The smaller the $s_j$, the larger the degree of sparsity for $\ma a_j$.  The sparsity parameter $s_j$  is usually set based on cross-validation procedures. Alternatively, values of $s_j$ can simply be chosen to result in desired amounts of sparsity.
+
+
+\end{frame}
+
+\begin{frame}[fragile, plain]\frametitle{SGCCA data analysis}
+
+Let us assume we are interested in this analysis (prediction problem)
+
+\begin{figure}[!!!h]
+\centering
+\begin{tikzpicture}
+\tikzstyle{every node}=[draw,shape=circle,auto,node distance=2.5cm];
+\node (ER) {ER};
+\node (mRNA) [below left of=Location] {mRNA};
+\node (miRNA) [above left of=Location] {miRNA};
+\draw (mRNA) -- (ER)
+(miRNA) -- (ER);
+\end{tikzpicture}
+\caption{between-block connection for Breast TCGA data.}
+\label{design_glioma}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile, plain]\frametitle{SGCCA data analysis}
+
+<<prev, cache=TRUE>>=
+X <- t(breast_multi$RNAseq)
+Y <- t(breast_multi$miRNA)
+AA <- list(rnaseq=X, miRNA=Y, group=as.numeric(group)-1) 
+C <-  matrix(c(0, 0, 1, 0, 0, 1, 1, 1, 0), 3, 3)
+C
+@
+\end{frame}
+
+
+\begin{frame}[fragile, plain]\frametitle{SGCCA data analysis}
+
+Let us estimate the weights for the 1st component 
+
+<<sgcca, cache=TRUE>>=
+sgcca.breast = sgcca(AA, C, c1 = c(.071,.2, 1),
+                     ncomp = c(1, 1, 1),
+                     scheme = "centroid",
+                     scale = TRUE,
+                     verbose = FALSE)
+@
+\end{frame}
+
+
+
+\begin{frame}[fragile, plain]\frametitle{SGCCA data analysis}
+
+The mRNA associated with ER+ (i.e, positive part of first axis) are (NOTE:results are ordered)
+<<sgcca3>>=
+source("R/selectVars.R")
+ans <- selectVars(sgcca.breast, table=1, axis=1, end="pos")
+length(ans)
+ans
+@
+
+\end{frame}
+
+
+
+\begin{frame}[fragile, plain]\frametitle{SGCCA data analysis}
+
+The miRNA associated with ER+ (e.g. positive part of the first axis) are (NOTE:results are ordered)
+<<sgcca4>>=
+ans <- selectVars(sgcca.breast, table=2, axis=1, end="pos")
+length(ans)
+ans
+@
+
+\end{frame}
+
+
+\begin{frame}[plain]\frametitle{Concluding remarks}
+
+\begin{description}[labelwidth=\widthof{\textbf{Canonical correlation}}]
+ \item[Correlation] Y = X
+ \item[Multiple correlation] $Y = X_1 X_2 X_3 \cdots X_k$
+ \item[Canonical correlation] $Y_1 Y_2 Y_3 \cdots Y_j = X_1 X_2 X_3 \cdots X_k$
+\end{description}
+
+\begin{itemize}
+  \item Co-inertia analysis (CIA) is similar to CCA but it optimizes the squared covariance between the eigenvectors while CC optimizes
+        the correlation.
+  \item CIA can be applied to datasets where the number of variables (genes) far exceeds the number of samples (arrays) such is the case in several omic data, while CCA requires a regularized version to be implemented.
+  \item Sparse and reguralized methods requires a tuning parameter. This makes these methods computing demanding.
+\end{itemize}
+
+
+\end{frame}
+
+
+
+\begin{frame}[plain]\frametitle{Take home messages}
+\begin{itemize}
+  \item Multivariate methods are purely descriptive methods that do not test a hypothesis to generate a p-value.
+  \item They are not optimized for variable of biomarkers discovery, though the introduction of sparsity in variable loadings may help in the selection of variables forn downstream analyses.
+  \item Number of variables in omic data is a challenge to tradicional visualization tools. New {\tt R} packages including {\tt ggord} are being developed to address this issue.
+  \item Dynamic visualization is possible using {\tt ggvis}, {\tt ploty}, {\tt explor} and other packages.
+  \item Projection in the same space of variable annotation (GO or Reactome) may help to determine gene sets or patwhays associated with our traits.
+
+\end{itemize}
+\end{frame}
+
+
+\section{Recommended lectures}
+
+\begin{frame}[plain]\frametitle{Recommended lectures}
+
+\footnotesize
+
+\begin{itemize}
+\item Millstein et al. (2009). Disentangling molecular relationships with a causal inference test. BMC Bioinf, 10:23.
+\item Ebrahim and Smith (2008). Mendelian randomization: can genetic epidemiology help redress the failure of observational epidemiology?. Hum Genet, 123:15-33.
+\item Liu et al. (2013). Epifenome-wide association data implicate DNA methylation as an intermediary of genetic risk in rheumatoid arthritis. Nat Biotech, 31(2):142-148.
+\item Voight et al. (2012). Plasma HDL cholesterol and risk of myocardial infarction: a mendelian randomisation study. Lancet, 380(9841): 572-580.
+\item Meng et al. (2014). A multivariate approach to the integration of multi-omics datasets. BMC Bioinf, 15:162.
+\item Witten et al. (2009). A Penalized Matrix Decomposition, with Applications to Sparse Principal Components and Canonical Correlation Analysis. Biostatistics, 10(3):515-34.
+\item Meng et al. (2016). Dimension reduction techniques for the integrative analysis of multi-omics data. Brief Bioinform, 17(4): 628-641.
+\item Tenenhaus A. and Tenenhaus M. (2011). Regularized Generalized Canonical Correlation Analysis. Psychometrika, 76: 257-84.
+\item Tenenhaus et al. (2014).  Variable Selection for Generalized Canonical Correlation Analysis. Biostatistics 15(3):569-83.
+\end{itemize}
+\end{frame}
+
+
+
+
+\end{document}
+
+
+
+
+

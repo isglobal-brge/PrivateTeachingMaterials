@@ -1,0 +1,12 @@
+\beamer@sectionintoc {1}{Multidimensional reduction}{3}{0}{1}
+\beamer@subsectionintoc {1}{1}{Principal component analysis}{4}{0}{1}
+\beamer@subsectionintoc {1}{2}{PCA requirements}{24}{0}{1}
+\beamer@subsectionintoc {1}{3}{Number of significant components}{27}{0}{1}
+\beamer@subsectionintoc {1}{4}{Principal curves}{29}{0}{1}
+\beamer@subsectionintoc {1}{5}{Improvements of PCA}{33}{0}{1}
+\beamer@sectionintoc {2}{Clustering methods}{39}{0}{2}
+\beamer@subsectionintoc {2}{1}{Hierarchical clustering}{43}{0}{2}
+\beamer@subsectionintoc {2}{2}{Partitioning methods}{45}{0}{2}
+\beamer@subsectionintoc {2}{3}{Model-based methods}{48}{0}{2}
+\beamer@subsectionintoc {2}{4}{Clusteing methods with R}{49}{0}{2}
+\beamer@sectionintoc {3}{Clustering related issues}{64}{0}{3}

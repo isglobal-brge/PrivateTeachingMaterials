@@ -1,0 +1,84 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,top=3cm,bottom=3cm,left=2cm,right=2cm]{geometry}
+%\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+\usepackage[pdftex]{color,graphicx,epsfig}
+\DeclareGraphicsRule{.pdftex}{pdf}{.pdftex}{}
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage[spanish]{babel}
+\usepackage[ansinew]{inputenc}
+
+
+
+\begin{document}
+
+
+\title{\bf Non-supervised methods}
+\date{}
+
+
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent {\bf TASK 1 - Multidimensional reduction:} File {\tt nhanes.Rdata} contains two tables ({\tt nhanes.nut} and {\tt nhanes.air}) including variables about nutrients and air pollution obtained from NHANES project. The file also contains two objects describing the column names of those tables ({\tt nut.desc} and {\tt air.desc}, respectively). These tables can be loaded into R by executing
+
+\begin{verbatim}
+load(``data_exercises/nhanes.Rdata'')
+\end{verbatim}
+
+ 
+\begin{enumerate}
+ \item Perform a principal component analysis of nutrient variables (columns 1:29 of table {\tt nhanes.nut}) using variable {\tt } as the grouping variable and determine those variables that are associated with each category ({\tt normal} and {\tt hypercol}). Use the default method of the {\tt ord} function and do not forget to scale the data.
+ \end{enumerate}
+ 
+\bigskip
+
+
+\noindent {\bf TASK 2 - Multidimensional reduction:} File {\tt nci60.Rdata} contains miRNA, mRNA and protein data of melanoma, leukemia and CNS disease. Data are encapsulated in a list where each components stands for a given omic data (NOTE: features are in rows and samples in columns). Data corresponds to cells lines from the NCI-60 panel available at TCGA project. 21 cell lines are providing information about 537 miRNAs, 12,895 gene expression and 7,016 proteins. We are interested in obtaining omic profiles to characterize those diseases. NOTE: The vector {\tt cancer} is a factor variable indicating  the type of cancer of each sample.  
+
+ 
+\begin{enumerate}
+ \item Load data into R and select miRNA table by executing
+ 
+ \begin{verbatim}
+ load(''data_exercises/nci60.Rdata'')
+ miRNA <- nci60$miRNA
+ \end{verbatim}
+ 
+ \item Perform a PCA using of miRNA dataset  and give the top-5 features associated with each tumor.
+ \item How much variability is explained by the first two axes?
+ \item Determine how many axes are necessary to be selected to properly reduce the dimensionallity of this data.
+\end{enumerate}
+ 
+
+\noindent {\bf TASK 3 - Hierarchical analysis:}  Load data called {\tt diet.Rdata} by executing 
+
+\begin{verbatim}
+load(``data_exercises/diet.Rdata'')
+\end{verbatim}
+
+There are three databases called X1, X2 and X3. X1 contains outcome and confounding variables. X2 contains nutriens and X3 contains food consumption. We aim to identify cluster of individuals given nutrients and food consumption variables. Once clusters are identify we will assess whether these clusters are associated with any colorectal cancer. After that, we will perform an analysis to provide an interpretation of clusters with regard to our variables. Let us do these steps 
+
+\begin{enumerate}
+\item Create a table having nutrients and food variables by executing 
+\begin{verbatim}
+X <- cbind(X2, X3)
+\end{verbatim}
+
+\item Perform a hierarchical clustering of X and select the optimal number of clusters. How many sample are in each cluster?
+
+\item Assess association between this variable cluster and the variable {\tt cascoc} of table X1. NOTE: use {\tt glm} function.
+
+\item Perform a PCA and use the cluster variable as a grouping variable to illustrate whether samples are separated with regard to it.
+
+\end{enumerate}
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

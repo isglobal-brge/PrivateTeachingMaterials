@@ -1,0 +1,15 @@
+base
+lattice
+survival
+Formula
+ggplot2
+Hmisc
+foreign
+RODBC
+readxl
+gdata
+xtable
+haplo.stats
+mvtnorm
+SNPassoc
+compareGroups
