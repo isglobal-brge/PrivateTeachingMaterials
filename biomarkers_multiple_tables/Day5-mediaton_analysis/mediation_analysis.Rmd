@@ -4,8 +4,8 @@ author:
 - affiliation: Bioinformatics Research Group in Epidemiology
   name: Juan R Gonzalez
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -40,7 +40,7 @@ that explains the underlying mechanism of the relatioship between LOY and cancer
 Let us load a dataset containing information about LOY, genes and tumoral status belonging to TCGA project and lung cancer.
 
 ```{r load}
-load("c:/Juan/CREAL/GitHub/biomarkers_multiple_tables/data/lusc.Rdata")
+load("c:/Juan/CREAL/GitHub/PrivateTeachingMaterials/biomarkers_multiple_tables/data/lusc.Rdata")
 ```
 
 ## How to analyze mediation effects?
@@ -73,7 +73,7 @@ We want X to affect M. If X and M have no relationship, M is just a third
 variable that may or may not be associated with Y. A mediation makes sense only if X affects M. In our example we should fit:
 
 ```{r mod2}  
-model.M <- glm(TTTY15 ~ LOY + age, data=lusc)
+model.M <- glm(DDX3Y ~ LOY + age, data=lusc)
 summary(model.M)
 ```
 
@@ -88,7 +88,7 @@ If a mediation effect exists, the effect of X on Y will disappear
 (or at least weaken) when M is included in the regression. The effect of X on Y goes through M. Let us verify this by using our data
 
 ```{r mod3}
-model.Y <- glm(Cancer ~ LOY + TTTY15 + age, data=lusc, family="binomial")
+model.Y <- glm(Cancer ~ LOY + DDX3Y + age, data=lusc, family="binomial")
 summary(model.Y)
 ```
 
@@ -123,7 +123,7 @@ results and see if it's different from zero.
 
 ```{r mediation}
 library(mediation)
-res <- mediate(model.M, model.Y, treat='LOY', mediator='TTTY15')
+res <- mediate(model.M, model.Y, treat='LOY', mediator='DDX3Y')
 summary(res)
 ```
 

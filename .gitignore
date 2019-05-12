@@ -35,3 +35,6 @@ vignettes/*.pdf
 # power point
 *.ppt
 *.pptx
+
+# answers
+*/answer_exercises

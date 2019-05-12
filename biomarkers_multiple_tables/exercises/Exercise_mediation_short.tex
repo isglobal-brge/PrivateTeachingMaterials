@@ -1,0 +1,37 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,top=3cm,bottom=3cm,left=2cm,right=2cm]{geometry}
+%\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+\usepackage[pdftex]{color,graphicx,epsfig}
+\DeclareGraphicsRule{.pdftex}{pdf}{.pdftex}{}
+\usepackage{amssymb,amsmath}
+\usepackage{enumerate}
+\usepackage[spanish]{babel}
+\usepackage[ansinew]{inputenc}
+
+
+
+\begin{document}
+
+
+\title{\bf Mediation analysis}
+\date{}
+
+
+\maketitle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent {\bf TASK:} Load file {\tt diet2.Rdata} into R by using {\tt load} command. The function loads an object called {\tt diet} that is a data.frame including information about 4861 individulas and several variables including diseases and confounding variables (columns 1-16), nutrients (columns 17-26) and food consumption (columns 27-48). 
+
+\bigskip
+
+\noindent Perform mediation analysis considering colesterol as a mediator of the association observed between consumption of processed meat (variable {\tt gra\_conveniencefood}) and colorectal cancer (variable {\tt casoc}). NOTE: adjust the models by {\tt sexo}, {\tt t\_energy}, {\tt BMIhoy} and {\tt edad}.
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
