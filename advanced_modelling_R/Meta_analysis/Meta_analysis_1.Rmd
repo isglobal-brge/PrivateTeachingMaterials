@@ -37,7 +37,7 @@ I assume you are familiar with:
 
 
 
-## Introduction
+## Outline
 - Overview
 - Types of effects
 - Searching The Literature
@@ -45,7 +45,9 @@ I assume you are familiar with:
 - Pooling Effect Sizes
       - Fixed Effects Model
       - Random Effects Model
+      - Forest plot
 - Evaluating Heterogeneity
+      - Funnel plot
       - Sensitivity Analysis
       - Subgroup Analysis
       - Outlier's detection
@@ -307,7 +309,7 @@ temp <- subset(woodyplants, treat=="fert")[1:10, ]
 example <- data.frame(Study = study,
   Ne=temp$n.elev, Me=temp$mean.amb, Se=temp$sd.amb,
   Nc=temp$n.elev, Mc=temp$mean.elev, Sc=temp$sd.elev)
-write.table(example, file="data/example.txt",
+write.table(example, file="../data/example.txt",
             quote=FALSE, sep="\t", row.names = FALSE)
 example
 ```
