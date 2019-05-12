@@ -28,7 +28,7 @@ Barcelona Institute for Global Health - [ISGlobal](http://www.isglobal.org)
 > * Meta-Regression (Mixed Effects Model)
 > * Publication Bias
 >      * Trim-and-fill
->       * Fail-Safe N
+>      * Fail-Safe N
 >      * P-curve
 
 ## Day 3:  Modelos lineales para datos longitudinales continuos
