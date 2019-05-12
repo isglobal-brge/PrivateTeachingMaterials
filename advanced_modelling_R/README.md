@@ -1,4 +1,4 @@
-# Advanced statistical modelling with R
+# Análisis estadístico avanzado con R
 
 `IACS - Instituto Aragonés de Ciencias de la Salud. Zaragoza`
 
