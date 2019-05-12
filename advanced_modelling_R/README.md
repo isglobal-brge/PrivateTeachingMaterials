@@ -1,6 +1,6 @@
 # Advanced statistical modelling with R
 
-`IACS - Instituto Aragones de Ciencias de la Salud. Zaragoza`
+`IACS - Instituto Aragonés de Ciencias de la Salud. Zaragoza`
 
 13-16 May 2019
 
@@ -12,7 +12,7 @@ Bioinformatics Research Group in Epidemiology - [BRGE](https://brge.isglobal.org
 Barcelona Institute for Global Health - [ISGlobal](http://www.isglobal.org)
 
 
-## Day 1: Meta-analysis
+## Día 1: Meta-analysis
 > * Searching The Literature
 > * Pooling Effect Sizes
 >      * Fixed Effects Model
@@ -20,7 +20,7 @@ Barcelona Institute for Global Health - [ISGlobal](http://www.isglobal.org)
 >      * Forest Plots  
 > * Evaluating Heterogeneity
 
-## Day 2: Meta-analysis (cont.)
+## Día 2: Meta-analysis (cont.)
 > * Funnel plots
 >      * Sensitivity Analysis
 >      * Subgroup Analysis
@@ -31,14 +31,14 @@ Barcelona Institute for Global Health - [ISGlobal](http://www.isglobal.org)
 >      * Fail-Safe N
 >      * P-curve
 
-## Day 3:  Modelos lineales para datos longitudinales continuos
+## Día 3:  Modelos lineales para datos longitudinales continuos
 > * Visualización de datos longitudinales
 > * ANOVA para medidas repetidas
 > * MANOVA
 > * GEE
 > * Modelos mixtos
 
-## Day 4: Análisis de supervivencia con eventos recurrentes
+## Día 4: Análisis de supervivencia con eventos recurrentes
 > * Breve introducción al análisis de supervivencia
 > * Modelos condicionales y marginales
 > * Modelos de fragilidad
