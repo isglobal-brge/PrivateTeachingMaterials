@@ -37,5 +37,4 @@ vignettes/*.pdf
 *.pptx
 
 # remove things
-*/answer_exercises
 Hidden*

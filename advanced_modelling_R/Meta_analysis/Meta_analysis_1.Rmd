@@ -513,7 +513,7 @@ barplot(contrib, names = res.bin$studlab, ylim = c(0, 60),
 
 ## How Much Can Estimates Of $\tau^2$ Differ?
 
-- DerSimonian-Laird (method.tau="REML")
+- DerSimonian-Laird (method.tau="DL")
 
 - Restricted maximum-likelihood estimator (method.tau="REML")
 
@@ -767,7 +767,7 @@ out$outliers
 ## Exercise
 
 1. Using the `example` dataset:
-     - Does the removal of any trial change the main conclusion about the effect of EPO?
+     - Does the removal of any trial change the main conclusion about the effect?
      - Is there any study that can be considered as an outlier, and hence, being removed from the analysis?
 
 2. The data `Fleiss93` contains information about a meta-analysis on aspirin in preventing death after myocardial infarction
