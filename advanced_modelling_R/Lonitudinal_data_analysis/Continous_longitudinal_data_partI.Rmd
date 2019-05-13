@@ -1,0 +1,218 @@
+---
+title: "Longitudinal data analysis (day 1)"
+subtitle: "Advanced modelling with R"
+author: |
+  | Juan R Gonzalez
+  | juanr.gonzalez@isglobal.org
+institute: |
+  | BRGE - Bioinformatics Research Group in Epidemiology
+  | ISGlobal - Barcelona Institute for Global Health
+  | http://brge.isglobal.org
+output:
+  beamer_presentation:
+  toc: false
+slide_level: 2
+includes:
+  in_header: header.tex  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment="", message=FALSE, 
+                      warning=FALSE, cache=TRUE, fig.width = 4, 
+                      fig.height = 4)
+```
+
+  
+# Data format
+
+Data can be available in width or long format
+
+```{r, width}
+data.width <- read.table("../data/hypothetical_ancho.txt", 
+                         header=TRUE)
+head(data.width)
+```
+
+
+# Data format
+
+```{r, long}
+data.long <- read.table("../data/hypothetical_largo.txt", 
+                        header=TRUE)
+head(data.long)
+```
+
+# Data format
+
+Data are normally collected in width format since they can be easily collected in a database. You can use the function `reshape` to transform data into long format as following
+
+```{r, width2long}
+data.long2 <- reshape(data.width, direction = "long",
+                      varying = list(paste0("time", 1:4)),
+                      idvar = c("id","group"), 
+                      v.names="score",
+                      timevar = "time", times=1:4)
+```
+
+# Data format
+
+```{r print}
+subset(data.long, id==1)
+subset(data.long2, id==1)
+``` 
+
+# Data format
+
+Another option with `reshape2`
+
+```{r print2}
+data.long3 <- reshape2::melt(data.width, 
+                id.vars = c("id", "group"))
+subset(data.long3, id==1)
+``` 
+  
+  
+# Data visualization - Individual profiles
+
+```{r, profiles}
+with(data.long, interaction.plot(time, id, score))
+```
+
+# Data visualization - Overall profile
+
+```{r, overall_profile}
+datos.agg <- aggregate(score ~ time, 
+                       data = data.long, mean)
+with(datos.agg, plot(time, score, 
+                     ylab="mean score", type="l"))
+```
+
+# Data visualization - Both
+
+```{r, both}
+with(data.long, interaction.plot(time, id, score))
+with(datos.agg, lines(time, score, ylab="mean score", 
+                      col="red", lwd=3))
+```
+
+# Data visualization - Grouping
+
+```{r, groups, eval=FALSE}
+with(data.long, interaction.plot(time, id, score, 
+       col=c(rep("red",3), rep("blue",3)), 
+       legend=FALSE))
+legend("bottomright", lty=1, c("A","B"), 
+       col=c("red", "blue"))
+```
+
+
+# Data visualization - grouping
+
+```{r, groups_show, echo=FALSE}
+with(data.long, interaction.plot(time, id, score, 
+       col=c(rep("red",3), rep("blue",3)), legend=FALSE))
+legend("bottomright", lty=1, c("A","B"), col=c("red", "blue"))
+```
+
+
+# Data visualization - overall profile by group
+
+```{r, groups2, eval=FALSE}
+datos.agg <- aggregate(score ~ time + group, 
+                       data = data.long, mean)
+with(datos.agg, interaction.plot(time, group, score, 
+       col=c("red", "blue"), legend=FALSE))
+legend("bottomright", lty=1, c("A","B"), 
+       col=c("red", "blue")) 
+```
+
+
+# Data visualization - overall profile by group
+
+```{r, groups2_show, echo=FALSE}
+datos.agg <- aggregate(score ~ time + group, data = data.long, mean)
+with(datos.agg, interaction.plot(time, group, score, 
+       col=c("red", "blue"), legend=FALSE))
+legend("bottomright", lty=1, c("A","B"), col=c("red", "blue")) 
+```
+
+
+# Data visualization - lattice
+
+```{r lattice1}
+library(lattice)
+xyplot(score ~ time, group=id, 
+       data = data.long, type="l", col="tomato")
+```
+
+
+# Data visualization - lattice
+
+```{r lattice2}
+library(lattice)
+xyplot(score ~ time | group, group=id, 
+       data = data.long, type="l", col="blue")
+```
+
+# Data Analysis: End-point analysis
+
+```{r, endpoint}
+mod <- aov(time4 ~ time1 + group, data.width)
+summary(mod)
+```
+
+# Data Analysis: ANOVA repeated measurements
+
+The naive version is obtained by 
+
+```{r, anova_rep}
+mod <- aov(score ~ as.factor(time)*group, data.long)
+summary(mod)
+```
+
+
+# Data Analysis: ANOVA repeated measurements
+
+The proper analysis has to be performed by 
+
+```{r, anova_rep2}
+mod <- aov(score ~ as.factor(time)*group + Error(id), data.long)
+summary(mod)
+```
+
+
+# Data Analysis: MANOVA
+
+```{r, manova}
+mod <- manova(cbind(time1, time2, time3, time4) ~ group, data.width)
+summary(mod)
+```
+
+
+# Data Analysis: MANOVA
+
+Other tests can be applied 
+
+```{r, manova2}
+summary(mod, test = "Wilks")
+summary(mod, test = "Hotelling-Lawley")
+```
+
+# Exercise 1
+
+Para estudiar las diferencias entre dos procedimientos diferentes de recuperación de pacientes de un infarto, se consideraron dos grupos experimentales en sendos hospitales, de 8 pacientes cada uno. La variable respuesta es el índice de Bartel, que varía entre 0 y 100, y que constituye una medida de la habilidad funcional con la que se valoran diferentes capacidades, de forma que valores más altos se corresponden con una mejor situación del paciente. De cada uno de los 16 pacientes se dispone de su respuesta cada semana a lo largo de 5 semanas consecutivas. Los datos se pueden encontrar en el archivo *recuperainfarto.txt*.
+
+
+1. Representa gráficamente las trayectorias de las mediones de forma separada para cada hospital que conforma cada uno de los dos procedimientos.
+
+2. ¿Cuál de los dos procedimientos presenta una mejor recuperación de los pacientes? ¿Es esta diferencia estadísticamente significativa? [NOTA: contesta a estas preguntas planteando la pregunta estadística que creas conveniente]
+
+
+# Exercise 2
+
+En un estudio sobre la agudeza visual se dispone de la respuesta de 7 individuos. La respuesta en cada ojo es el retraso en milisegundos entre la emisión de una luz y la respuesta en a la misma por el cortex. Cada ojo se somete a cuatro mediciones correspondientes a cuatro instantes consecutivos. Se tienen mediciones en el ojo izquierdo y derecho. Los datos se pueden encontrar en el archivo *agudezavisual.txt*
+
+1. Crea una nueva base de datos agregando la información para cada una de la medida repetida (ojo) [NOTA: toma la media - usa la función `aggregate` - esto es el procedimiento habitual cuando no se conocen modelos más avanzados]
+2. Representa de forma gráfica la respuesta en cada tiempo.
+3. ¿Existen diferencias entre la medición final y la basal?
+4. ¿Existe un efecto temporal en la respuesta?
