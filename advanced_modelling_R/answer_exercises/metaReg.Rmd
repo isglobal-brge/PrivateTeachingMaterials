@@ -3,9 +3,9 @@ title: "Exercise Sub-group & Meta-regression"
 author: "Juan R Gonzalez"
 date: "14 de mayo de 2019"
 output: 
-  BiocStyle::pdf_document:
-    toc_depth: 3
   BiocStyle::html_document:
+    toc_depth: 3
+  BiocStyle::pdf_document:
     toc_depth: 3
 ---
 
@@ -51,7 +51,7 @@ res
 # Forest plot
 
 ```{r forest, fig.height=12, fig.width=10}
-forest(res)
+forest(res, prediction=TRUE)
 ```
 
 
@@ -99,4 +99,21 @@ bubble(res.reg.year, xlab="Publication Year",
 ```
 
 
-# Publication
+# Publication bias
+
+```{r pub}
+funnel(res)
+```
+
+```{r metabias}
+metabias(res)
+```
+
+```{r trim}
+trimfill(res)
+```
+
+```{r fsn}
+library(metafor)
+fsn(res$TE, res$seTE^2)
+```

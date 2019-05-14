@@ -97,7 +97,7 @@ For meta-regression we compute
 $$R^2 = \frac{\tau^2_{REM} - \tau^2_{MEM}}{\tau^2_{REM}}$$
 
 - $\tau^2_{REM}$ heterogeneity of Random Effects model
-- $\tau^2_{REM}$ heterogeneity of Meta-regression
+- $\tau^2_{MEM}$ heterogeneity of Meta-regression
 
 ## Meta regression: help to explain heterogeneity
 
@@ -128,7 +128,7 @@ summary(res.reg2)
 
 ## Meta regression: `bubble` plots
 
-```{r bubble, fig.height=5, fig.width=5}
+```{r bubble}
 bubble(res.reg2, xlab = "Publication Year",
        col.line = "blue", studlab = TRUE)
 ```
@@ -177,15 +177,15 @@ are correlated with precision.
 
 ```{r funnel}
 data(cochrane, package = "rmeta")
-res <- metabin(ev.trt, n.trt, ev.ctrl, n.ctrl, 
+res.coch <- metabin(ev.trt, n.trt, ev.ctrl, n.ctrl, 
                data=cochrane, studlab = name)
-funnel(res)
+funnel(res.coch)
 ```
 
 ## Funnel plots
 
 ```{r funnel_lab}
-funnel(res, studlab = TRUE)
+funnel(res.coch, studlab = TRUE)
 ```
 
 ## Funnel plots
@@ -193,7 +193,7 @@ funnel(res, studlab = TRUE)
 An even better way to inspect the funnel plot is through contour-enhanced funnel plots, which help to distinguish publication bias from other forms of asymmetry (Peters et al. 2008). Contour-enhanced funnels include colors signifying the significance level into which the effects size of each study falls. We can plot such funnels using this code:
 
 ```{r funnel_contour, eval=FALSE}
-funnel(res, xlab="Hedges' g", 
+funnel(res.coch, xlab="Hedges' g", 
        contour = c(.95,.975,.99),
        col.contour=c("darkblue","blue","lightblue"))+
 legend(1.4, 0, c("p < 0.05", "p<0.025", "< 0.01"),bty = "n",
@@ -205,7 +205,7 @@ legend(1.4, 0, c("p < 0.05", "p<0.025", "< 0.01"),bty = "n",
 
 
 ```{r funnel_contour_show, echo=FALSE}
-funnel(res, xlab="Hedges' g", 
+funnel(res.coch, xlab="Hedges' g", 
        contour = c(.95,.975,.99),
        col.contour=c("darkblue","blue","lightblue"))
 legend(1.4, 0, c("p < 0.05", "p<0.025", "< 0.01"),bty = "n",
@@ -222,27 +222,10 @@ legend(1.4, 0, c("p < 0.05", "p<0.025", "< 0.01"),bty = "n",
 
 ## Asymmetry: Egger's test
 
+$H_0$: Simmetry
+
 ```{r egger}
-metabias(res, k.min=7) # default is 10
-```
-
-
-## Asymmetry: Egger's test
-
-- Thrombolytic Therapy after Acute  Myocardial Infarction
-- $H_0$: No asymmetry
-
-```{r egger3}
-data("Olkin95", package="meta")
-res.olkin <- metabin(event.e, n.e, event.c, n.c, 
-                     data=Olkin95)
-metabias(res.olkin, method.bias = "linreg") # Egger
-```
-
-## Asymmetry: Egger's test
-
-```{r egger4}
-metabias(res.olkin, method.bias = "score") # Harbord
+metabias(res.coch, k.min=7) # default is 10
 ```
 
 
@@ -281,7 +264,7 @@ The trim-and-fill procedure includes the following five steps (Schwarzer, Carpen
 ## Trim-and-fill method
 
 ```{r trimfill}
-res.trim <- trimfill(res)
+res.trim <- trimfill(res.coch)
 res.trim
 ```
 
@@ -304,11 +287,12 @@ funnel(res.trim, col=ifelse(res.trim$trimfill,
 
 The new resulting estimates are:
 
+\tiny
 ```{r new_estimates}
-summary(res)
+summary(res.coch)
 summary(res.trim)
 ``` 
-
+\normalsize
 
 ## Trim-and-fill method
 
@@ -323,8 +307,19 @@ funnel(res.trim)
 - Rosenthal method (sometimes called a *file drawer analysis*)
 - Is the number of NULL studies that have to be added to reduce
 the significance of the meta-analysis to (usually 0.05)
-- This technique is not widely used in meta-analysis
-- It is availalbe in `metafor` package
+- It is availalbe in `metafor` package (function `fsn`)
+
+
+## Fail-Safe N
+
+Requires: `fsn(yi, vi)`
+
+```{r}
+library(metafor)
+res.fsn <- fsn(res.coch$TE, res.coch$seTE^2)
+res.fsn
+```
+
 
 
 # Exercises
