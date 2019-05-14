@@ -1,5 +1,5 @@
 ---
-title: "Longitudinal data analysis (day 1)"
+title: "Longitudinal data analysis (traditional methods)"
 subtitle: "Advanced modelling with R"
 author: |
   | Juan R Gonzalez
@@ -22,6 +22,18 @@ knitr::opts_chunk$set(echo = TRUE, comment="", message=FALSE,
                       fig.height = 4)
 ```
 
+# Overview
+
+- Data visualization
+- Taditional methods
+     - Change in time-points
+     - ANOVA with repeated measures
+     - MANOVA
+- Modern methods
+     - GEE
+     - Mixed models
+     
+see: `Datos_continuos_modelos_tradicionales.pdf`     
   
 # Data format
 

@@ -2,11 +2,13 @@
 # META-ANALYSIS
 #
 
-install.packages(c("meta", "rmeta", "metafor", "RCurl",
-                   "altmeta", "RSImed"))
+install.packages(c("meta", "rmeta", "metafor", 
+                   "BiocManager", "altmeta", "RSImed"))
+BiocManager::install("BiocStyle")
 
-library(RCurl)
+#
+# Continuous 
+#
 
-# P-curve
-script <- getURL("https://raw.githubusercontent.com/nicebread/p-checker/master/p-curve.R", ssl.verifypeer = FALSE)
-eval(parse(text = script))
+install.packages(c("geepack", "doBy", "nlme",
+                   "lme4", "trellis"))
