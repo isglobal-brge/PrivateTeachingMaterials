@@ -1,0 +1,102 @@
+---
+title: "Exercise Sub-group & Meta-regression"
+author: "Juan R Gonzalez"
+date: "14 de mayo de 2019"
+output: 
+  BiocStyle::pdf_document:
+    toc_depth: 3
+  BiocStyle::html_document:
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = "",
+                      message = FALSE, warning = FALSE,
+                      cache=TRUE)
+```
+
+# Load data
+
+First, let us load the data
+
+```{r load}
+data(dat.hackshaw1998, package="metafor")
+mydat <- dat.hackshaw1998
+```
+
+```{r show}
+head(mydat)
+``` 
+
+
+# Meta-analysis
+
+Let us load the required library
+
+```{r load_lib}
+library(meta)
+```
+
+We have variance and it should be standard error
+
+```{r meta}
+mydat$si <- sqrt(mydat$vi)
+res <- metagen(yi, si, sm="OR",
+               data=mydat, 
+               studlab = paste(author, year, sep=""))
+res
+```
+
+
+# Forest plot
+
+```{r forest, fig.height=12, fig.width=10}
+forest(res)
+```
+
+
+```{r forest_jama, fig.height=12}
+forest(res, layout="JAMA")
+```
+
+# Detection of outliers
+
+```{r outliers}
+library(altmeta)
+res.out <- metaoutliers(res$TE, res$seTE^2)
+res.out$outliers
+```
+
+# Invesigation of covariates
+
+## Sub-group analysis
+
+```{r sub}
+res.sub <- update(res, byvar = country)
+res.sub
+```
+
+
+## Meta-regression
+
+### Country
+
+```{r metareg}
+res.reg.country <- metareg(res, ~ country)
+res.reg.country
+```
+
+### Effect of year
+
+```{r metareg2}
+res.reg.year <- metareg(res, ~ year)
+res.reg.year
+```
+
+```{r bubble}
+bubble(res.reg.year, xlab="Publication Year",
+       col.line = "darkblue", studlab = TRUE)
+```
+
+
+# Publication

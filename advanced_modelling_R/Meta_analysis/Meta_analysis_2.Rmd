@@ -80,7 +80,7 @@ forest(res.bcg, layout = "JAMA")
 
 ## Meta regression: help to explain heterogeneity
 - The inclusion of covariates in the analysis may help to control for heterogeneity
-- **Meta-Regression* does not differ much from a **subgroup analysis**. 
+- **Meta-Regression** does not differ much from a **subgroup analysis**. 
 - Actually, subgroup analyses with more than two groups are nothing more than a meta-regression with categorial covariates.
 - Meta-regression does also allow us to use continuous data as covariates and check weather values of this variable are associated with effect size.
 - Subgroup analyses make no sense when k<10. 
@@ -90,10 +90,14 @@ forest(res.bcg, layout = "JAMA")
 
 ![](figures/mixed.png)
 
+## Meta regression: help to explain heterogeneity
+
 For meta-regression we compute 
 
 $$R^2 = \frac{\tau^2_{REM} - \tau^2_{MEM}}{\tau^2_{REM}}$$
 
+- $\tau^2_{REM}$ heterogeneity of Random Effects model
+- $\tau^2_{REM}$ heterogeneity of Meta-regression
 
 ## Meta regression: help to explain heterogeneity
 
@@ -101,27 +105,32 @@ $$R^2 = \frac{\tau^2_{REM} - \tau^2_{MEM}}{\tau^2_{REM}}$$
 `Test of Moderators`: Global test of the covariate
 `Model results`: Sinificance of each category
 
+\tiny
+
 ```{r metareg}
 res.reg <- metareg(res.bcg, alloc)
-summary(res.reg)
+res.reg
 ```
+\normalsize
 
 ## Meta regression: help to explain heterogeneity
 
 Let’s assume we want to check if the *publication year* is associated with effect size. 
 
+\tiny
+
 ```{r metareg2}
-res.reg2 <- metareg(res.bcg, year)
+res.reg2 <- metareg(res.bcg, ~ year)
 summary(res.reg2)
 ```
 
+\normalsize
+
 ## Meta regression: `bubble` plots
 
-```{r bubble}
-bubble(res.reg2,
-       xlab = "Publication Year",
-       col.line = "blue",
-       studlab = TRUE)
+```{r bubble, fig.height=5, fig.width=5}
+bubble(res.reg2, xlab = "Publication Year",
+       col.line = "blue", studlab = TRUE)
 ```
 
 # Exercises
