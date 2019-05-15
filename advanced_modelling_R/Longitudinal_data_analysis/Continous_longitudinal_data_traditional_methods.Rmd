@@ -79,7 +79,8 @@ Another option with `reshape2`
 
 ```{r print2}
 data.long3 <- reshape2::melt(data.width, 
-                id.vars = c("id", "group"))
+                id.vars = c("id", "group"),
+                value.name = "score")
 subset(data.long3, id==1)
 ``` 
   
@@ -111,7 +112,7 @@ with(datos.agg, lines(time, score, ylab="mean score",
 
 ```{r, groups, eval=FALSE}
 with(data.long, interaction.plot(time, id, score, 
-       col=c(rep("red",3), rep("blue",3)), 
+       col=ifelse(group=="A", "red", "blue"), 
        legend=FALSE))
 legend("bottomright", lty=1, c("A","B"), 
        col=c("red", "blue"))
@@ -188,7 +189,8 @@ summary(mod)
 The proper analysis has to be performed by 
 
 ```{r, anova_rep2}
-mod <- aov(score ~ as.factor(time)*group + Error(id), data.long)
+mod <- aov(score ~ as.factor(time)*group + Error(id), 
+           data = data.long)
 summary(mod)
 ```
 
@@ -196,7 +198,8 @@ summary(mod)
 # Data Analysis: MANOVA
 
 ```{r, manova}
-mod <- manova(cbind(time1, time2, time3, time4) ~ group, data.width)
+mod <- manova(cbind(time1, time2, time3, time4) ~ group, 
+              data = data.width)
 summary(mod)
 ```
 
