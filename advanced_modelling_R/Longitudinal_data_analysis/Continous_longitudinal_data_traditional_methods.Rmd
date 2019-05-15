@@ -225,9 +225,9 @@ Para estudiar las diferencias entre dos procedimientos diferentes de recuperació
 
 # Exercise 2
 
-En un estudio sobre la agudeza visual se dispone de la respuesta de 7 individuos. La respuesta en cada ojo es el retraso en milisegundos entre la emisión de una luz y la respuesta en a la misma por el cortex. Cada ojo se somete a cuatro mediciones correspondientes a cuatro instantes consecutivos. Se tienen mediciones en el ojo izquierdo y derecho. Los datos se pueden encontrar en el archivo *agudezavisual.txt*
+En un estudio sobre la agudeza visual se dispone de la respuesta de 7 individuos. La respuesta en cada ojo es el retraso en milisegundos entre la emisión de una luz y la respuesta en a la misma por el cortex. Cada ojo se somete a cuatro mediciones correspondientes a cuatro instantes consecutivos. Se tienen mediciones en el ojo izquierdo y derecho y el objetivo es comprobar si la agudeza de los indivduos del grupo A es mejor que la del grupo B. Los datos se pueden encontrar en el archivo *agudezavisual.txt*
 
 1. Crea una nueva base de datos agregando la información para cada una de la medida repetida (ojo) [NOTA: toma la media - usa la función `aggregate` - esto es el procedimiento habitual cuando no se conocen modelos más avanzados]
 2. Representa de forma gráfica la respuesta en cada tiempo.
 3. ¿Existen diferencias entre la medición final y la basal?
-4. ¿Existe un efecto temporal en la respuesta?
+4. ¿Existe un efecto temporal en la respuesta entre grupos?
