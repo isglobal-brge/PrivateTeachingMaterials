@@ -229,5 +229,5 @@ En un estudio sobre la agudeza visual se dispone de la respuesta de 7 individuos
 
 1. Crea una nueva base de datos agregando la información para cada una de la medida repetida (ojo) [NOTA: toma la media - usa la función `aggregate` - esto es el procedimiento habitual cuando no se conocen modelos más avanzados]
 2. Representa de forma gráfica la respuesta en cada tiempo.
-3. ¿Existen diferencias entre la medición final y la basal?
-4. ¿Existe un efecto temporal en la respuesta entre grupos?
+3. ¿Existe un efecto temporal en la respuesta entre grupos con la información agregada?
+4. ¿Y sin agregar los datos y usando dos niveles de correlación?
