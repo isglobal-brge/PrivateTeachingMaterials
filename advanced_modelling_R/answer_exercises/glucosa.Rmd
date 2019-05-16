@@ -31,14 +31,11 @@ str(dat)
 # Data in long format
 
 ```{r long2}
-medidas <- c(paste(1:3, 2016, sep="_"), 
-             paste(1:3, 2017, sep="_"), 
-             paste(1:3, 2018, sep="_"))
-medidas
 
-vars <- paste0("P.CINTURA", medidas)
+vars <- grep("^P.CINTURA", names(dat), value = TRUE)
 
 datS <- dat[ , c("ID_FAMILIAR", "ZONA", vars)]
+
 dat2 <- reshape(datS, direction="long",
                 varying = list(vars),
                 idvar = c("ID_FAMILIAR","ZONA"),
@@ -56,8 +53,9 @@ write.table(dat2, file="cintura.txt", sep="\t", quote=FALSE,
 
 
 ```{r long}
-datS <- dat[ , c("ID_FAMILIAR", "ZONA", 
-                 grep("^GLUC", names(dat), value = TRUE))]
+vars <- grep("^GLUC", names(dat), value = TRUE)
+
+datS <- dat[ , c("ID_FAMILIAR", "ZONA", vars)]
 
 head(datS)
 
