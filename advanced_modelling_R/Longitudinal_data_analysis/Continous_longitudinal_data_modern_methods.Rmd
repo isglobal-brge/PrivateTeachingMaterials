@@ -100,7 +100,7 @@ head(ohio)
 
 # GEE: estimación de parámetros
 
-```{r gee, eval=FALSE}
+```{r gee2, eval=FALSE}
 library(ggplot2)
 dd.agg <- aggregate(resp ~ age + smoke, 
                     data=ohio, FUN = mean)
@@ -112,7 +112,7 @@ ggplot(dd.agg, aes(y=resp, x=age,
 # GEE: estimación de parámetros
 
 
-```{r gee, echo=FALSE}
+```{r gee3, echo=FALSE}
 library(ggplot2)
 dd.agg <- aggregate(resp ~ age + smoke, 
                     data=ohio, FUN = mean)
@@ -429,6 +429,19 @@ library(lme4)
 mod.bin <- lmer(resp ~ age*smoke + (1|id), 
                 data=ohio, family="binomial" )
 summary(mod.bin)
+```
+
+
+# GEE: estimación de parámetros
+
+
+```{r gee4, echo=FALSE}
+library(ggplot2)
+dd.agg <- aggregate(resp ~ age + smoke, 
+                    data=ohio, FUN = mean)
+ggplot(dd.agg, aes(y=resp, x=age,
+                   fill=as.factor(smoke))) + 
+    geom_bar(position="dodge", stat="identity")
 ```
 
 
