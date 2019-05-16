@@ -36,18 +36,18 @@ vars <- grep("^P.CINTURA", names(dat), value = TRUE)
 
 datS <- dat[ , c("ID_FAMILIAR", "ZONA", vars)]
 
-dat2 <- reshape(datS, direction="long",
+cint <- reshape(datS, direction="long",
                 varying = list(vars),
                 idvar = c("ID_FAMILIAR","ZONA"),
                 v.names = c("cintura"),
                 timevar = "tiempo", times=1:9)
-head(dat2)
+head(cint)
 
-dat2$familia <- substr(dat2$ID_FAMILIAR, 1, 8)
-head(dat2)
+cint$familia <- substr(cint$ID_FAMILIAR, 1, 8)
+head(cint)
 
 
-write.table(dat2, file="cintura.txt", sep="\t", quote=FALSE,
+write.table(cint, file="cintura.txt", sep="\t", quote=FALSE,
             row.names = FALSE)
 ```
 
@@ -59,17 +59,78 @@ datS <- dat[ , c("ID_FAMILIAR", "ZONA", vars)]
 
 head(datS)
 
-dat3 <- reshape(datS, direction="long",
+gluc <- reshape(datS, direction="long",
                 varying = list(grep("^GLUC", names(dat), value = TRUE)),
                 idvar = c("ID_FAMILIAR","ZONA"),
                 v.names = c("glucosa"),
                 timevar = "tiempo", times=1:3)
-dat3$familia <- substr(dat3$ID_FAMILIAR, 1, 8)
-head(dat3)
+gluc$familia <- substr(gluc$ID_FAMILIAR, 1, 8)
+head(gluc)
 
-write.table(dat3, file="glucosa.txt", sep="\t", quote=FALSE,
+write.table(gluc, file="glucosa.txt", sep="\t", quote=FALSE,
             row.names = FALSE)
 ```
 
 
+# Analysis: cintura
 
+```{r cint}
+library(nlme)
+cint.s <- groupedData(cintura ~ tiempo | ID_FAMILIAR, cint)
+plot(cint.s)
+```
+
+```{r plot2}
+library(ggplot2)
+
+cint.agg <- aggregate(cintura ~ tiempo + ZONA, cint, mean)
+
+plt <- ggplot(cint, aes(x = tiempo, y = cintura, color=ZONA)) +
+    geom_line(aes(group = ZONA), alpha = .3) +
+    geom_line(data = cint.agg, alpha = .8, size = 3) +
+    scale_color_manual(values=c("darkgreen", "lightgreen"))
+plt
+```
+
+```{r model}
+library(nlme)
+mod.cint1 <- lme(cintura ~ tiempo*ZONA, cint.s, 
+                random = ~ 1, na.action="na.omit")
+mod.cint2 <- lme(cintura ~ tiempo*ZONA, cint.s, 
+                random = ~ tiempo, na.action = "na.omit")
+anova(mod.cint1, mod.cint2)
+
+summary(mod.cint1)
+summary(mod.cint2)
+``` 
+
+
+```{r resid}
+plot(mod.cint1)
+plot(mod.cint2)
+```
+
+
+# Analysis: glucosa
+
+```{r gluc}
+gluc.s <- groupedData(glucosa ~ tiempo | ID_FAMILIAR, gluc)
+plot(gluc.s)
+```
+
+```{r plot22}
+gluc <- subset(gluc, glucosa < 200)
+gluc.agg <- aggregate(glucosa ~ tiempo + ZONA, gluc, mean)
+
+plt <- ggplot(gluc, aes(x = tiempo, y = glucosa, color=ZONA)) +
+    geom_line(aes(group = ZONA), alpha = .3) +
+    geom_line(data = gluc.agg, alpha = .8, size = 3) +
+    scale_color_manual(values=c("darkgreen", "lightgreen"))
+plt + ylim(c(80, 110))
+```
+
+```{r mod_gluc}
+mod.gluc <- lme(glucosa ~ tiempo*ZONA, gluc.s, 
+                random = ~ 1)
+summary(mod.gluc)
+```
