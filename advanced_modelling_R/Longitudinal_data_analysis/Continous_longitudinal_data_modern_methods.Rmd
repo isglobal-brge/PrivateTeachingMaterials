@@ -97,20 +97,41 @@ data(ohio)
 head(ohio)
 ```
 
+
 # GEE: estimación de parámetros
 
+```{r gee, eval=FALSE}
+library(ggplot2)
+dd.agg <- aggregate(resp ~ age + smoke, 
+                    data=ohio, FUN = mean)
+ggplot(dd.agg, aes(y=resp, x=age,
+                   fill=as.factor(smoke))) + 
+    geom_bar(position="dodge", stat="identity")
+```
+
+# GEE: estimación de parámetros
+
+
+```{r gee, echo=FALSE}
+library(ggplot2)
+dd.agg <- aggregate(resp ~ age + smoke, 
+                    data=ohio, FUN = mean)
+ggplot(dd.agg, aes(y=resp, x=age,
+                   fill=as.factor(smoke))) + 
+    geom_bar(position="dodge", stat="identity")
+```
 
 # GEE: estimación de parámetros
 
 El outcome es binario -> binomial 
 
 ```{r gee_fit}
-fit.exch <- geeglm(resp~age+smoke, 
+fit.exch <- geeglm(resp~age*smoke, 
                    family=binomial(link="logit"),
                    data=ohio, id=id, 
                    corstr = "exchangeable",
                    std.err="san.se")
-fit.unstr <- geeglm(resp~age+smoke, 
+fit.unstr <- geeglm(resp~age*smoke, 
                     family=binomial(link="logit"),
                     data=ohio, id=id, 
                     corstr = "unstructured",
@@ -400,6 +421,8 @@ summary(mod.nested)
 
 
 # Modelos para datos binarios
+
+**`ohio`** dataset: Health effect of air pollution. Children followed for four years, wheeze status (`resp`: 0-no, 1-yes) recorded annually as well as maternal smoking and age (0 is 9 years old) [**datos en formato largo**]
 
 ```{r binarios}
 library(lme4)
