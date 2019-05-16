@@ -99,6 +99,9 @@ head(ohio)
 
 # GEE: estimación de parámetros
 
+
+# GEE: estimación de parámetros
+
 El outcome es binario -> binomial 
 
 ```{r gee_fit}
@@ -384,6 +387,7 @@ Los **efectos anidados**, el factor aparece SÓLO dentro de un nivel particular d
 
 ![Datos anidados](figures/nested.png)
 
+
 # Modelos anidados
 
 
@@ -391,7 +395,49 @@ Los **efectos anidados**, el factor aparece SÓLO dentro de un nivel particular d
 mod.nested <- lme(y ~ time*covar, 
                   random = ~ time | teraphist/subject,
                   data = df)
+summary(mod.nested)
 ```
+
+
+# Modelos para datos binarios
+
+```{r binarios}
+library(lme4)
+mod.bin <- lmer(resp ~ age*smoke + (1|id), 
+                data=ohio, family="binomial" )
+summary(mod.bin)
+```
+
+
+# Modelos para datos binarios 
+
+```
+Fixed effects:
+            Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -3.40171    0.27884 -12.200   <2e-16 ***
+age         -0.21704    0.08678  -2.501   0.0124 *  
+smoke        0.47824    0.29925   1.598   0.1100    
+age:smoke    0.10465    0.13912   0.752   0.4519   
+```
+
+# Modelos para datos binarios
+
+Estimates with 95% CI
+
+```{r sum_bin}
+se <- sqrt(diag(vcov(mod.bin)))
+tab <- cbind(Est = fixef(mod.bin),
+            Lower = fixef(mod.bin) - 1.96 * se, 
+            Upper = fixef(mod.bin) + 1.96 * se)
+```
+
+
+# Modelos para datos binarios
+
+```{r sum_bin_show}
+tab
+```
+
 
 
 # Exercises
