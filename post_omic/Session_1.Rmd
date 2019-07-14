@@ -1,0 +1,385 @@
+---
+title: "Bioconductor infrastructures and annotation"
+author: 
+  - name: Juan R Gonzalez
+    affiliation: 
+    - Bioinformatics Research Group in Epidemiology, Barcelona Institute for Global Health, Spain
+    email: juanr.gonzalez@isglobal.org
+date: "July, 2019"
+output:
+  BiocStyle::html_document:
+    toc: yes
+    toc_depth: 3
+  BiocStyle::pdf_document:
+    fig_caption: yes
+    toc_depth: 3
+abstract: Brief introduction to Bioconductor, `GRanges`  objects and a global overview of main Bioconductor data structures (`ExpressionSet` and `SummarizedExperiments`).    
+---
+
+```{r style, echo = FALSE, results = 'asis'}
+options(width=120)
+knitr::opts_chunk$set(cache=TRUE, fig.align = TRUE, 
+                      warning = FALSE,
+                      message = FALSE, comment = "")
+```
+
+# Global overview of the course
+
+It is assumed that attendees are familiar with omic association analyses (GWAS, gene expression, methylation, RNA-seq, ...). This course aims to illustrate how to provide biological insights of those significant features obtained in these association studies (SNPs, genes, CpGs, genomic regions, ...). We will start by providing a global overview about Bioconductor, some of the infrastructures used to encapsulate omic data and the use of `GenomicRanges` which helps to manipulate genomic annotations when analyzing high-throughput sequencing data. Session 2 illustrates how to visualize significant results (circos plots and genomic tracks) along with information from omic annotations (ENCODE, GTEx, GWAS catalog, ...). Finally, Session 3 will show how to assess whether our hits are significantly enriched in those annotated databases.
+
+We do not aim to give a global overview of existing Bioconductor packages to perform visualization, annotations or enrichment analyses since they are very well detailed in their related vignettes. Our goal is to provide the main details to reproduce real analyses that appear in most of the papers which analyze omic data.
+
+Association analyses can be performed by using different programs. Here you can find a solution under R/Bioconductor infrastructure: https://isglobal-brge.github.io/book_omic_association/
+
+![Omic association analyses](figures/cover_book.png)
+
+
+# Introduction
+
+This lecture offers a summary of two data structures (`ExpressionSet` and `SummarizedExperiments`) that are implemented in Bioconductor for dealing with transcriptomic or epigenomic data. Omic data are typically composed of three datasets: one containing the actual high-dimensional data of omic variables per individuals, annotation data that specifies the characteristics of the variables and phenotypic information that encodes the subject's traits of interest, covariates and sampling characteristics. For instance, transcriptomic data can be stored in a `ExpressionSet` object, which is a data structure that contains the transcription values of individuals at each transcription probe, the genomic information for the transcription probes and the phenotypes of the individuals. Specific data is accessed, processed and analyzed with specific functions from diverse packages, conceived as methods acting on the `ExpressionSet` objects. 
+
+
+![Data in Bioconductor](figures/eSet_vs_dataframe.png)
+
+# Bioconductor
+
+- [Bioconductor](https://bioconductor.org/)'s goal: Analysis and comprehension of high-throughput genomic data
+
+- Statistical analysis: large data, technological artifacts, designed experiments; rigorous
+
+- Comprehension: biological context, visualization, reproducibility
+
+- High-throughput
+    - Sequencing: RNASeq, ChIPSeq, variants, copy number, ...
+    - Microarrays: expression, SNP, ...
+    - Flow cytometry, proteomics, images, ...
+
+
+## Packages, vignettes, work flows, ...
+
+- 1649 software packages (Jan'19); also...
+    - 'Annotation' packages -- static data bases of identifier maps,gene models, pathways, etc; e.g., `TxDb.Hsapiens.UCSC.hg19.knownGene`
+    - 'Experiment packages -- data sets used to illustrate software functionality, e.g., `airway`
+- Discover and navigate via `biocViews`
+- Package 'landing page'
+    - Title, author / maintainer, short description, citation, installation instructions, ..., download statistics
+- All user-visible functions have help pages, most with runnable examples
+
+
+## Vignettes
+
+- 'Vignettes' an important feature in Bioconductor -- narrative documents illustrating how to use the package, with integrated code
+- 'Release' (every six months) and 'devel' branches
+- [Support site](https://support.bioconductor.org);
+  [videos](https://www.youtube.com/user/bioconductor), [recent courses](https://bioconductor.org/help/course-materials/)
+
+
+## Bioconductor packages installation
+
+```{r install, eval=FALSE}
+install.packages("BiocManager")
+library(BiocManager)
+install(c("DESeq2", "org.Hs.eg.db"))
+
+# or
+
+BiocManager::install("DESeq2")
+```
+    
+Remember that Github packages can be install by
+
+```{r install_github, eval=FALSE}
+install.packages("devtools")
+devtools::install_github("isglobal-brge/SNPassoc")
+```
+
+
+Once installed, the package can be loaded into an R session
+
+```{r require}
+library(GenomicRanges)
+```
+
+and the help system queried interactively, as outlined above:
+
+```{r help-bioc, eval=FALSE}
+help(package="GenomicRanges")
+vignette(package="GenomicRanges")
+vignette(package="GenomicRanges",
+         "GenomicRangesHOWTOs")
+?GRanges
+```
+
+# `ExpressionSet` objects
+
+- `ExpressionSet` was one of the first implementations of Bioconductor to manage \emph{omic} experiments. 
+
+- It is discouraged in Bioconductor's guidelines for the development of current and future packages
+
+- However, most publicly available data is available in this structure while future packages are still required to be able to upload and operate with it. 
+
+- The rows of \emph{omic} data are features and columns are subjects. 
+
+- Information is coordinated across the object's slots. For instance, subsetting samples in the assay matrix automatically subsets them in the phenotype metadata. 
+
+
+GEO repository (https://www.ncbi.nlm.nih.gov/geo/) contains thousands of transcriptomic experiments that are available in `ExpressionSet` format. Data can be loaded into R by: 
+
+```{r download_geo, eval=FALSE}
+library(GEOquery)
+gse69683 <- getGEO("GSE69683", destdir = ".")
+gse69683.expr <- gse69683[[1]]
+```
+ 
+You can directly loaded it into R with:
+
+```{r load_geo}
+load("data/GSE69683.Rdata")
+```
+
+
+This is how an `ExpressionSet` looks like:
+
+```{r show_geo}
+gse69683.expr
+```
+
+- `gse69683.expr` is an object of class `ExpressionSet` that has three main slots:
+
+  - Transcriptomic data is stored in the `assayData`
+
+  - Phenotypes (i.e. covariates) are in `phenoData` 
+
+  - Probe annotation in `featuredData`. 
+
+  - There are three other slots `protocolData`, `experimentData` and `annotation` with other information
+     
+
+Gene expression data can be retrieved by
+     
+```{r exprs} 
+expr <- exprs(gse69683.expr)
+dim(expr)
+expr[1:5,1:5]
+```
+
+
+Phenotypic data (i.e. covariates) are accesed by
+
+```{r pheno}
+pheno <- phenoData(gse69683.expr)
+pheno
+colnames(pheno)[1:10]
+```
+
+
+Data are properly organized. So that, we can run any statistical model or method you want
+
+```{r show}
+group <- pheno$characteristics_ch1
+table(group)
+```
+
+
+```{r boxplot}
+boxplot(expr["1007_PM_s_at",] ~ group)
+```
+
+
+The `fData` function gets the probes' annotation that will be required to genome data visualization and post-data analysis
+
+```{r get_annot} 
+probes <- fData(gse69683.expr)
+probes[1:5, 1:5]
+``` 
+
+
+Subsetting acts as in any other R object. Let us assume we want to select only healthy individuals
+
+```{r subset_gse}
+sel <- "cohort: Healthy, non-smoking"
+mask <- gse69683.expr$characteristics_ch1%in%sel
+gse <- gse69683.expr[ , mask]
+gse
+```
+
+# `GenomicRanges`
+
+- Aims aims to represent and manipulate the genomic annotation of molecular data under a reference genome. 
+
+- It contains functions to select specific regions and perform operations with them
+
+- Are important to annotate and manipulate genomic, transcriptomic and epigenomic data.
+
+- In particular, they are used in conjunction with `RangedSummarizedExperiment` which is an extension of `ExpressionSet`. 
+
+
+The **annotation** data refers to the characteristics of the variables in \emph{omi} data. Each variable/feature (SNP, gene, CpG, ...) may be given a location in a reference genome that defines a coordinate system: "chromosome id" and "position" along the chromosome. For instance, a position such as chr10:4567-5671 would represent the 4567th to the 5671st base pair on the reference's chromosome 10.
+
+
+
+
+The main functionalities implemented in the package `GenomicRanges` are methods on `GRanges`. They are created by the function `GRanges`. Minimum requirements are the genomic positions given by the chromosome (argument `seqnames`) and base pair coordinates  (argument `ranges`). 
+
+**Example:** `GenomicRange` with 8 segments on either chr1 or chr2, each with defined start and end points (these are requited). We add strand information, passed through the argument `strand`, to indicate the direction of each sequence. We also add a hypothetical variable `disease` that indicates whether asthma or obesity have been associated with each interval and the `gene_id`. These extra variables can be accessed using `mcols()` function as will be later illustrated .
+
+```{r createGR}
+library(GenomicRanges)
+gr <- GRanges(seqnames=c(rep("chr1", 4), rep("chr2", 4)),
+              ranges = IRanges(start = c(1000, 1800, 5300, 7900,
+                                         1300, 2100, 3400, 6700),
+                               end =c(2200, 3900, 5400, 8100,
+                                      2600, 3300, 4460, 6850)),
+              strand = rep(c("+", "-"), 4),
+              disease = c(rep("Asthma",4), rep("Obesity",4)))
+gr
+```
+
+
+`GRanges` objects can be large and there are several functions to access data in different ways. 
+
+- Access to a given range
+
+```{r gr1}
+gr[1]
+```
+
+- `seqnames` extract the chromosomes:
+
+```{r gr2}
+seqnames(gr)
+seqnames(gr)[1] <- "chr2"
+gr
+```
+
+
+- Add information:
+
+```{r gr3}
+gr$gene_id <- paste0("Gene", 1:8)
+gr
+```
+
+We can also have acces to extra columns in the `GRanges` object as following:
+
+```{r column_granges}
+mcols(gr)
+table(mcols(gr)$disease)
+```
+
+
+`GenomicRanges` package provides different methods to perform arithmetic with the ranges, see `?GRanges` or [here](https://bioconductor.org/help/course-materials/2014/SeattleFeb2014/) for a detailed list of methods and operations.
+
+
+For instance, with `shift` an interval is moved a given base-pair distance and with `flank` the interval is stretched  
+
+```{r gr4}
+#shift: move all intervals 10 base pair towards the end
+shift(gr, 10)
+
+#shift: move each intervals individually
+shift(gr, seq(10,100, length=8))
+
+#flank:  recover regions next to the input set. 
+#        For a 50 base stretch upstream (negative value for
+#        downstream)
+flank(gr, 50)
+```
+
+
+It is also possible to perform operations between two different `GRanges` objects. For instance, one may be interested in knowing the intervals that overlap with a targeted region:
+
+```{r gr8}
+target <- GRanges(seqnames="chr1", 
+                  range=IRanges(start=1200, 4000))
+target
+gr.ov <- findOverlaps(target, gr)
+gr.ov
+```
+
+# `SummarizedExperiment`
+
+- It is an extension of `ExpressionSet` objects.
+
+- The `SummarizedExperiment` package contains two classes: `SummarizedExperiment` and `RangedSummarizedExperiment`.
+
+- The fundamental difference between the two classes is that the rows of a `RangedSummarizedExperiment` object represent genomic ranges of interest instead of a DataFrame of feature. The ranges are accesses with `rowRanges()`
+
+![SummarizedExperiment](figures/sumExp.svg)
+
+
+`airway` package contains an example dataset from an RNA-Seq experiment of read counts per gene for airway smooth muscles. These data are stored in a `RangedSummarizedExperiment` object which contains 8 different experimental and assays 64,102 gene transcripts.
+
+```{r airway}
+library(SummarizedExperiment)
+data(airway, package="airway")
+se <- airway
+se
+```
+
+
+Experiment data is accesed with `assay()`:
+
+```{r exp_data}
+names(assays(se))
+gene.dat <- assays(se)$counts
+gene.dat[1:5, 1:5]
+```
+
+
+Phenotypic data is accesed with `colData()`:
+
+```{r pheno_data}
+colData(se)
+```
+
+
+Subset for only those samples treated with dexamethasone
+
+```{r pheno_data_treated}
+se[, se$dex == "trt"]
+```
+
+
+We can also subset a `SummarizedExperiment` by a given interval or genomic region
+
+```{r subset_interval}
+roi <- GRanges(seqnames="chr1", ranges=100000:1100000)
+# or
+roi <- GRanges(seqnames="1", IRanges(start=100000,
+                                        end=1100000))
+se.roi <- subsetByOverlaps(se, roi)
+se.roi
+```
+
+It is worth to notice that the chromosome is accessed by using `seqnames="1"` instead of `seqnames="chr1"` since they are annotated in the [NCBI](https://www.ncbi.nlm.nih.gov/) or [Ensembl](https://www.ensembl.org/index.html) style:
+
+```{r chr_style}
+seqlevelsStyle(se)
+```
+
+NOTE: `seqnames="chr1"` corresponds to [UCSC](https://genome.ucsc.edu/) style
+
+--------------------------------------------------
+
+**EXERCISE**: [Recount2](https://jhubiostatistics.shinyapps.io/recount/) provides data for different RNA-seq experiments. These includes data from GTEx or TCGA projects. We have donwloaded a subset of data corresponding to breast cancer and created a variable called `er` which encodes the estrogen receptor status (Negative and Positive). The `SummarizedExperiment` object is called `breast` and is available in the file `data_exercises/breast_tcga.Rdata`. Load the data into R and answer the next questions
+
+1. How many samples are in the `SummarizedExperiment` object?
+
+2. And how many genes?
+
+3. Which is the number of samples with positive estrogen receptor status (variable `er`)?
+
+4. Subset the individuals having Negative strogen receptor status and draw a boxplot of the first gene. 
+
+5. Create a `SummarizedExperiment` object of the genomic region chr6:151.2-151.8Mb. How many genes are in that region? How many of them are annotated? That is, how many of them have a gene symbol name (HINT: use `rowRanges()` function and remember that `mcols()` function is used to get acccess to columns in a `GRanges` object) ?
+
+
+--------------------------------------------------
+
+# Session info
+
+```{r}
+sessionInfo()
+```
+

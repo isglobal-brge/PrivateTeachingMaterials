@@ -345,11 +345,12 @@ plot(augPred(mod.lme, level = 0:1, length.out = 2))
 
 # Modelos mixtos
 
-
+\tiny
 ```{r modelo1_sum}
 summary(mod.lme)
 ```
 
+\normalsize
 
 
 # Modelos mixtos
