@@ -1,15 +1,9 @@
+#
+# EXERCISE 2
+#
 
-load(file="data_exercises/breast_tcga.RData")
-
-roi <- GRanges(seqnames="chr6", IRanges(start=151.2e6,
-                                 end=151.8e6))
-breast.roi <- subsetByOverlaps(breast, roi)
-assay(breast.roi)
-rowRanges(breast.roi)
-
-
-load(file="data_exercises/GSE85426.Rdata")
-
+load(file="data_exercises/GSE18123.Rdata")
+table(gse18123$group)
 
 library(MEAL)
 ans <- runPipeline(gse18123,
@@ -31,11 +25,43 @@ fit <- getProbeResults(ans.sva, coef=2,
 head(fit)
 
 
+de <- fit[fit$adj.P.Val<0.05,]  # 5% FDR
+dim(de)
+
+de$sign <- ifelse(de$logFC < 0, "red", "blue")
+table(de$sign)
+
+library(org.Hs.eg.db)
+# see columns(org.Hs.eg.db)
+cols <- c("SYMBOL", "CHR", "CHRLOC", "CHRLOCEND"  )
+annot <- select(org.Hs.eg.db, keys=de$"Gene Symbol",
+                columns=cols, 
+                keytype="SYMBOL")
+annot <- subset(annot, !duplicated(SYMBOL) & !is.na(CHR))
+bd <- merge(annot, de, by.x="SYMBOL", by.y="Gene Symbol")
+dim(bd)
+
+library(OmicCircos)
+plot(c(1,800), c(1,800), 
+     type="n", axes=FALSE, xlab="", ylab="")
+circos(R=300, type="chr", cir="hg19", col=TRUE, 
+       print.chr.lab=TRUE, W=10, cex=2)
+
+circos(R=250, cir="hg19", W=40,
+       mapping = bd[,c("CHR", "CHRLOCEND", "logFC")], 
+       type="b3", lwd=3, B=TRUE, cutoff = 0, 
+       col=bd$sign)
+
+circos(R=300, cir="hg19", W=40, 
+       mapping=bd[,c("CHR", "CHRLOCEND", "SYMBOL")], 
+       type="label", side="out", cex=0.6)
+
+
+
 library(org.Hs.eg.db)
 cols <- c("SYMBOL", "CHR", "CHRLOC", "CHRLOCEND"  )
 annot <- select(org.Hs.eg.db, keys="KIAA1468",
-                columns=cols, 
-                keytype="SYMBOL")
+                columns=cols, keytype="SYMBOL")
 annot
 
 library(Gviz)
@@ -102,26 +128,3 @@ plotTracks(c(idxTrack, axTrack, genesTrack, knownGenes, cpgIslands,
                 peaksTrack, gwasTrack),
            from=from, to=to, showTitle=FALSE)
 
-
-load(file="data_exercises/breast_tcga.RData")
-
-library(edgeR)
-counts <- assay(breast)
-group <- breast$er
-
-d <- DGEList(counts=airCounts, group=group)
-design <- model.matrix( ~ group)
-d <- estimateDisp(d, design)
-d$common.dispersion
-ans <- runPipeline(breast,
-                   variable = "er",
-                   sva = TRUE)
-fit <- getProbeResults(ans, coef=4, 
-                       fNames=c("ID", "Gene Symbol"))
-head(fit)
-
-pData(gse18123)$group <- factor(
-pData(gse18123)$"diagnosis:ch1", 
-levels = c("CONTROL", "AUTISM", "PDD-NOS", 
-           "ASPERGER'S DISORDER"))
-                                            )

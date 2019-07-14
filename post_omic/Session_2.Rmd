@@ -563,7 +563,7 @@ Other features for circos plot can be found [here](http://bioconductor.org/packa
 
 --------------------------------------------------
 
-**EXERCISE**: The file `data_exercises/GSE57475.Rdata` contains data corresponing to the GEO accesion number GSE57475. This dataset was used to test whether peripheral blood gene expression profiles could be used as a molecular diagnostic tool for distinguishing children with Autistic Spectrum Disorder (ASD) from controls by performing peripheral blood gene expression profiling on 170 patients with ASD and 115 controls collected from Boston area hospitals.
+**EXERCISE**: The file `data_exercises/GSE18123.Rdata` contains data corresponing to the GEO accesion number GSE18123. This dataset was used to test whether peripheral blood gene expression profiles could be used as a molecular diagnostic tool for distinguishing children with Autistic Spectrum Disorder (ASD) from controls by performing peripheral blood gene expression profiling on 170 patients with ASD and 115 controls collected from Boston area hospitals.
 
 1. Determine those genes that are differentially expressed between CONTROLs and the three types of ASD analyzed (AUTISM, PDD-NOS and ASPERGER'S DISORDER) (variable `group`).
 
