@@ -25,7 +25,7 @@ cv <- cv.glmnet(x.imp, y, alpha = 0.5)
 cv$lambda.min
 
 model <- glmnet(x.imp, y, alpha = 0.5, 
-                      lambda = cv$lambda.min)
+                lambda = cv$lambda.min)
 coefs <- coef(model)[,1]
 coefMod <- coefs[coefs!=0]
 CpGs <- names(coefs)[coefs!=0]
@@ -51,10 +51,63 @@ abline(mod, col="blue")
 
 library(curatedTCGAData)
 library(MultiAssayExperiment)
+library(TCGAutils)
 library(omicade4)
 
+
+###  Breast
+
+# download data
+brca <- curatedTCGAData("BRCA", c("miRNASeqGene"), FALSE)
+sampleTables(brca)
+
+# select tumor samples
+brca.c <- splitAssays(brca, c("01"))
+
+# prepare survival data
+pheno <- colData(brca.c)[, getClinicalNames("BRCA")]
+pheno$time <- apply(pheno[, c("days_to_death", "days_to_last_followup")],
+                    1, function(x) max(x, na.rm=TRUE))
+pheno$time[pheno$time<0] <- 0
+pheno$status <- pheno$vital_status
+
+# get miRNA
+mirna <- assay(brca.c)
+colnames(mirna) <- substr(colnames(mirna),1,12)
+
+
+# create data.frame with complete cases
+o <- intersect(colnames(mirna), rownames(pheno))
+pheno.o <- pheno[o, ]
+mirna.o <- mirna[, o]
+breast.df <- data.frame(pheno.o, t(mirna.o))
+load("data/breast.Rdata")
+
+
+# run survival analysis
+library(survival)
+ii <- grep("hsa", names(breast.df))
+
+ff <- function(i, data) {
+  mod <- coxph(Surv(time, status) ~ data[,i], data=data)
+  ans <- summary(mod)$coefficients[5]
+  ans
+}
+
+out <- sapply(ii, ff, data=breast.df)
+
+res <- data.frame(miRNA=names(breast.df)[ii],
+                  pval=out)
+res$padj <- p.adjust(res$pval, method="BH")
+head(res[order(res$pval),])
+
+
+
+# gliobastoma
+
+
 gbm <- curatedTCGAData("GBM", c("RNASeq2GeneNorm", 
-                                   "RPPAArray", "miRNAArray"), FALSE)
+                                "RPPAArray", "miRNAArray"), FALSE)
 
 gbmL <- assays(gbm)
 lapply(gbmL, dim)
