@@ -55,6 +55,7 @@ install(c("GenomicRanges", "GEOquery", "GenomicRanges",
           "TxDb.Hsapiens.UCSC.hg19.knownGene", "GO.db", 
           "AnnotationHub", "limma", "MEAL", "edgeR", 
           "GOstats", "KEGG.db", "clusterProfiler",
-          "regioneR",
+          "regioneR", "omicade4", "curatedTCGAData",
+          "MultiAssayExperiment",
           "BSgenome.Hsapiens.UCSC.hg19.masked")
 ```
