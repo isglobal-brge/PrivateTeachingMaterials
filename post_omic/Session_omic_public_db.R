@@ -5,8 +5,9 @@
 library(GEOquery)
 library(glmnet)
 
+gse58045 <- getGEO("GSE58045")[[1]]
 
-setwd("c:/Juan/CREAL/BayesianPrediction/Bayesian_clock/paper")
+
 load("data/GSE58045.Rdata")
 gse58045
 names(pData(gse58045))
@@ -28,6 +29,9 @@ model <- glmnet(x.imp, y, alpha = 0.5,
 coefs <- coef(model)[,1]
 coefMod <- coefs[coefs!=0]
 CpGs <- names(coefs)[coefs!=0]
+
+
+gse41037 <- getGEO("GSE41037")[[1]]
 
 load("data/GSE41037.Rdata")
 common <- intersect(CpGs, rownames(gse41037))

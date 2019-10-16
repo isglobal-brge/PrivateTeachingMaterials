@@ -56,6 +56,6 @@ install(c("GenomicRanges", "GEOquery", "GenomicRanges",
           "AnnotationHub", "limma", "MEAL", "edgeR", 
           "GOstats", "KEGG.db", "clusterProfiler",
           "regioneR", "omicade4", "curatedTCGAData",
-          "MultiAssayExperiment",
+          "MultiAssayExperiment", "glmnet",
           "BSgenome.Hsapiens.UCSC.hg19.masked")
 ```
