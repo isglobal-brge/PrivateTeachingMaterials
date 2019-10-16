@@ -1,7 +1,6 @@
 # Post-omic data analysis
 
-4-hours course introducing post omic data analysis and visualization. Course given at 40th Annual Conference of the International Society for Clinical Biostatistics, July 2019.
-
+4-hours course introducing post omic data analysis and visualization. 
 
 **Lecturer**: Juan R Gonzalez, Associate Research Professor, Head of Bioinformatics Research Group in Genetic Epidemiology (BRGE) of
 Barcelona Institute for Global Health (ISGlobal) and Adjunct Professor to the Mathematics 
@@ -24,12 +23,10 @@ The ultimate goal of omic association studies is to find biomarkers that can be 
      - Bioconductor infrastructures (ExpressionSet and SummarizedExperiments, ...)
 
 - **Session 2:**
-     - Retreivin omic data annotation
+     - Retreiving omic data annotation
      - Experimental data visualization and annotation using GViz 
      - Circos plots
      
-- **Coffee break**
-
 - **Session 3:**
      - Enrichment analysis with curated databases (GO, KEGG, MSigDB, DISGeNET, ...)
      - Enrichment with public databases (ENCODE, ROADMAP Epigenomics, …)
