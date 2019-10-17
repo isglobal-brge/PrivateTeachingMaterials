@@ -7,7 +7,7 @@ library(glmnet)
 
 gse58045 <- getGEO("GSE58045")[[1]]
 
-
+setwd("c:/juan/CREAL/GitHub/PrivateTeachingMaterials/post_omic/")
 load("data/GSE58045.Rdata")
 gse58045
 names(pData(gse58045))
@@ -31,6 +31,7 @@ coefMod <- coefs[coefs!=0]
 CpGs <- names(coefs)[coefs!=0]
 
 
+# external validation
 gse41037 <- getGEO("GSE41037")[[1]]
 
 load("data/GSE41037.Rdata")

@@ -43,7 +43,25 @@ The ultimate goal of omic association studies is to find biomarkers that can be 
 
 ## Install required packages
 
-The material has been created using R version 3.5.0. These packages are required to be installed before starting the course:
+The material has been created using R version 3.5.0. Several packages are required to be installed before starting the course.
+
+
+For a non-heavy installation and reproducing how to analyze omic data from GEO and TCGA just install
+
+```
+install.packages("BiocManager")
+
+library(BiocManager)
+
+install(c("Biobase", "curatedTCGAData", "TCGAutils", 
+          "GEOquery", "MultiAssayExperiment", "omicade4",
+          "glmnet"))
+```
+
+
+For the post-omic analysis (heavy installation - maybe you can avoid this):
+
+
 
 ```
 install.packages("BiocManager")
@@ -55,7 +73,5 @@ install(c("GenomicRanges", "GEOquery", "GenomicRanges",
           "TxDb.Hsapiens.UCSC.hg19.knownGene", "GO.db", 
           "AnnotationHub", "limma", "MEAL", "edgeR", 
           "GOstats", "KEGG.db", "clusterProfiler",
-          "regioneR", "omicade4", "curatedTCGAData",
-          "MultiAssayExperiment", "glmnet",
-          "BSgenome.Hsapiens.UCSC.hg19.masked")
+          "regioneR", "BSgenome.Hsapiens.UCSC.hg19.masked"))
 ```
