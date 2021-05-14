@@ -5,9 +5,9 @@ author: |
   | juanr.gonzalez@isglobal.org
 subtitle: Advanced modelling with R
 output:
-  slidy_presentation: default
-  toc: no
   beamer_presentation: null
+  toc: no
+  slidy_presentation: default
 institute: |
   | BRGE -Bioinformatics Research Group in Epidemiology
   | ISGlobal -Barcelona Institute for Global Health
@@ -15,6 +15,10 @@ institute: |
 slide_level: 2
 includes:
   in_header: header.tex
+vignette: >
+  %\VignetteIndexEntry{Longitudinal data analysis (modern methods)}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r setup, include=FALSE}
@@ -194,18 +198,28 @@ fit2 <- geeglm(resp ~ factor(age), family=binomial(link="logit"),
 anova(fit1, fit2)
 ``` 
 
+# GEE: estimación de parámetros
+
+O el test de Wald
+
+```{r show_wald}
+summary(fit1)
+``` 
+
 
 # GEE: estimación de parámetros
 
-Podemos hacer un test para un parámetro en particular
+Podemos hacer un test para un parámetro en particular. En este caso lo haremos para cada parámetro
 
 \tiny
 ```{r con_par}
 library(doBy)
 est <- esticon(fit, diag(5))
+rownames(est) <- names(coef(fit))
 est
 ```
 \normalsize
+
 
 
 # GEE: estimación de parámetros
@@ -213,7 +227,7 @@ est
 ORs e IC95%
 
 ```{r or}
-OR.CI <- exp(cbind(est$Estimate, est$Lower, est$Upper))
+OR.CI <- exp(cbind(est$estimate, est$lwr, est$upr))
 rownames(OR.CI) <- names(coef(fit))
 colnames(OR.CI) <- c("OR", "Lower OR", "Upper OR")
 OR.CI
@@ -228,19 +242,19 @@ OR.CI
 
 ```{r estimate}
 val <- esticon(fit, c(0,-1,1,0,1))
-exp(val$Estimate)
+exp(val$estimate)
 val
 ```
 
 
 # Modelos mixtos
 
-- Como vimos en la sesión anterior, se podría usar un modelo lineal, pero:
-      - Las observaciones repetidas en cada grupo o cluster, no son necesariamente independientes.
-      - Con frecuencia, no solo se quieren tomar decisiones respecto de los grupos o cluster observados, sino que se quiere valorar el efecto de las variables explicativas en una población de la que los grupos son una muestra.
-      - Puede ser de interés valorar la variación del efecto de x de un grupo a otro.
-      - La estimación del efecto medio de las variables explicativas en cada grupo puede ser
-muy deficiente si no se recoge la posible variabilidad entre los grupos.
+Como vimos en la sesión anterior, se podría usar un modelo lineal, pero:
+
+- Las observaciones repetidas en cada grupo o cluster, no son necesariamente independientes.
+- Con frecuencia, no solo se quieren tomar decisiones respecto de los grupos o cluster observados, sino que se quiere valorar el efecto de las variables explicativas en una población de la que los grupos son una muestra.
+- Puede ser de interés valorar la variación del efecto de x de un grupo a otro.
+- La estimación del efecto medio de las variables explicativas en cada grupo puede ser muy deficiente si no se recoge la posible variabilidad entre los grupos.
 
 # Modelos mixtos
 - Modeliza la realación entre la variable dependiente y las covariables
@@ -426,37 +440,28 @@ summary(mod.nested)
 
 **`ohio`** dataset: Health effect of air pollution. Children followed for four years, wheeze status (`resp`: 0-no, 1-yes) recorded annually as well as maternal smoking and age (0 is 9 years old) [**datos en formato largo**]
 
+
 ```{r binarios}
 library(lme4)
-mod.bin <- lmer(resp ~ age*smoke + (1|id), 
+mod.bin <- glmer(resp ~ age*smoke + (1|id), 
                 data=ohio, family="binomial" )
+```
+
+
+
+
+
+
+# Modelos para datos binarios
+
+\tiny
+
+```{r summary}
 summary(mod.bin)
 ```
 
+\normalsize
 
-# GEE: estimación de parámetros
-
-
-```{r gee4, echo=FALSE}
-library(ggplot2)
-dd.agg <- aggregate(resp ~ age + smoke, 
-                    data=ohio, FUN = mean)
-ggplot(dd.agg, aes(y=resp, x=age,
-                   fill=as.factor(smoke))) + 
-    geom_bar(position="dodge", stat="identity")
-```
-
-
-# Modelos para datos binarios 
-
-```
-Fixed effects:
-            Estimate Std. Error z value Pr(>|z|)    
-(Intercept) -3.40171    0.27884 -12.200   <2e-16 ***
-age         -0.21704    0.08678  -2.501   0.0124 *  
-smoke        0.47824    0.29925   1.598   0.1100    
-age:smoke    0.10465    0.13912   0.752   0.4519   
-```
 
 # Modelos para datos binarios
 
@@ -479,6 +484,7 @@ tab
 
 
 # Exercises
+\small
 
 1. Analiza de nuevo los datos `agudezavisual.txt` usando un modelo mixto (ojo dentro de individuo) [NOTA: diferente al modelo tradicional que agregaría los datos]. ¿Hay un efecto tiempo?
 
